@@ -1448,7 +1448,7 @@ function __main(){
   function aiChat(o){
     var model=o.model||AI.model;
     if(!model)return Promise.reject(new Error('모델이 선택되지 않았어요. 위에서 모델을 골라 주세요.'));
-    var body={model:model,messages:o.messages,stream:true,options:Object.assign({temperature:0.3,num_ctx:8192},o.options||{})};
+    var body={model:model,messages:o.messages,stream:true,options:Object.assign({temperature:0.3,num_ctx:8192,num_predict:2048,repeat_penalty:1.1},o.options||{})};
     if(o.json)body.format='json';
     var text='',t0=Date.now(),tokens=0,handle={abort:function(){}};
     function onObj(j){
