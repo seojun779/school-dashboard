@@ -1,0 +1,20 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
+body{font:13px/1.5 "Malgun Gothic",system-ui,sans-serif;margin:0;width:330px;color:#1d2433}
+.h{background:#0f766e;color:#fff;padding:12px 14px;font-weight:800;font-size:14px}
+.b{padding:10px 14px 12px}
+h4{margin:12px 0 4px;font-size:12px;color:#0b5f58}
+.row{display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-top:1px solid #eef0f3}.row:first-of-type{border-top:0}
+.row b{flex:none;width:92px}.row span{flex:1;color:#667085;font-size:12px}
+.ok{color:#067647}.warn{color:#b54708}.bad{color:#d92d20}
+button{display:block;width:100%;margin:5px 0;padding:8px;border:0;border-radius:9px;font:700 12.5px inherit;cursor:pointer;background:#0f766e;color:#fff}
+button.g{background:#fff;color:#1d2433;border:1px solid #e4e7ec}
+label{display:flex;gap:6px;align-items:center;font-size:12px;margin:6px 0}
+.s{color:#667085;font-size:11.5px;margin:2px 0 6px}
+</style></head><body><div class="h">🎓 나의 학교 대시보드 연동</div><div class="b">
+<label><input type="checkbox" id="notify"> 과제 마감 알림 (24시간 · 6시간 · 1시간 전)</label>
+<h4>곧 마감되는 과제</h4><div id="due" class="s">확인 중…</div>
+<h4>연동 상태</h4><div id="health" class="s">확인 중…</div>
+<button id="open">대시보드 열기</button>
+<button id="sync" class="g">지금 업데이트 · 점검</button>
+<button id="cl" class="g">Claude 대화 학습</button>
+</div><script src="popup.js"></script></body></html>

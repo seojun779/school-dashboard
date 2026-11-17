@@ -1,0 +1,25 @@
+{
+  "name": "나의 학교 — 과제·시간표·공부 도우미",
+  "short_name": "나의 학교",
+  "description": "과제 마감, 시간표, 학점 계산, 강의자료 드라이브, 내 PC AI 공부 도우미",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "lang": "ko",
+  "background_color": "#f4f6f8",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

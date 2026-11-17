@@ -1,0 +1,200 @@
+import os
+import html, json, datetime as dt
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+e = html.escape
+DAYS = ['월', '화', '수', '목', '금', '토', '일']
+SEED = []
+SITE = bool(os.environ.get('SITE'))
+if SITE:
+    SEED = []
+TYPES = {'class': ('수업', 'c-class'), 'work': ('알바', 'c-work'), 'task': ('과제·마감', 'c-task'), 'etc': ('기타', 'c-etc')}
+
+# 정적 미리보기 (스크립트 없이도 보이도록): 이번 주 기준이 아니라 '반복 일정'만 요일별로 표시
+cols = []
+for i, d in enumerate(DAYS):
+    items = [x for x in SEED if i in x['days']]
+    body = ''.join('<div class="ev %s"><b>%s</b><span>%s</span></div>' % (TYPES[x['type']][1], e(x['title']), e((x['start'] + '~' + x['end'] + ' ' if x['start'] else '') + (x['place'] or x['memo'] or ''))) for x in items)
+    cols.append('<div class="col"><h3>%s</h3>%s</div>' % (d, body or '<div class="none">일정 없음</div>'))
+static = ''.join(cols)
+
+page = '''<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 시간표</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#1d2330;--muted:#5d6677;--line:#e1e5ec;--accent:#2f5bd8;
+--class:#2f5bd8;--work:#a64b00;--task:#b42318;--etc:#1b6b3a;--today:#eaf0ff;--ok:#1b6b3a;--okbg:#e6f4ea;--soon:#a64b00;--soonbg:#fff1e0}
+@media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b2029;--text:#e8ebf1;--muted:#9aa4b5;--line:#2b3240;--accent:#8fb0ff;
+--class:#8fb0ff;--work:#ffcf99;--task:#ffb4a8;--etc:#9ad8b0;--today:#202a44;--ok:#9ad8b0;--okbg:#17301f;--soon:#ffcf99;--soonbg:#3a2a14}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Pretendard","Malgun Gothic",system-ui,sans-serif;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 56px}h1{font-size:1.6rem;margin:0 0 4px}.sub{color:var(--muted);margin:0 0 14px;font-size:.92rem}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.btn{display:inline-block;padding:7px 14px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-size:.88rem;font-weight:700;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}.btn.del{background:#b42318}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}.bar b{min-width:150px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.col{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;min-height:150px}
+.col.today{background:var(--today);border-color:var(--accent)}.col h3{font-size:.95rem;margin:0 0 6px}.col h3 small{color:var(--muted);font-weight:400}
+.ev{color:var(--text);text-decoration:none;border-left:5px solid var(--class);background:var(--bg);border-radius:8px;padding:5px 8px;margin-bottom:6px;font-size:.85rem;cursor:pointer;display:block}
+.ev b{display:block}.ev span{display:block;color:var(--muted);font-size:.78rem}
+.c-class{border-left-color:var(--class)}.c-work{border-left-color:var(--work)}.c-task{border-left-color:var(--task)}.c-etc{border-left-color:var(--etc)}
+.none{color:var(--muted);font-size:.8rem}
+.pill{display:inline-block;vertical-align:middle;margin-left:8px;font-size:.78rem;font-weight:700;color:var(--accent);background:var(--today);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.banner{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;margin:10px 0}
+.banner .t1{font-size:.8rem;font-weight:700;color:var(--accent)}.banner .t2{font-weight:700}
+.banner.live{border-left-color:var(--ok);background:var(--okbg)}.banner.live .t1{color:var(--ok)}
+.ev.c-sch{border-left-color:var(--soon)}
+.ev.st-ongoing{background:var(--okbg)}.ev.st-upcoming{background:var(--soonbg)}.ev.st-done{opacity:.6}
+.ev .stt{font-weight:700;color:var(--soon)}.ev.st-ongoing .stt{color:var(--ok)}.ev.st-done .stt{color:var(--muted);font-weight:400}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:16px}.card h2{font-size:1.1rem;margin:0 0 8px}
+label{display:block;font-size:.85rem;margin:10px 0 3px;color:var(--muted)}
+input[type=text],input[type=date],input[type=time],select,textarea{width:100%;font:inherit;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--bg);color:var(--text)}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>div{flex:1;min-width:120px}.days{display:flex;gap:6px;flex-wrap:wrap}
+.days label{display:inline-flex;gap:4px;align-items:center;margin:0;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--text)}
+.m{color:var(--muted);font-size:.85rem}.act{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+#noscript-note{background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin-top:12px;color:var(--muted);font-size:.88rem}
+@media(max-width:860px){.week{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<div class="nav"><a class="btn ghost" href="과제표.html">과제표</a><a class="btn ghost" href="강의자료/index.html">강의자료</a><a class="btn ghost" href="https://claude.ai/new" target="_blank" rel="noopener noreferrer">Claude 도우미</a></div>
+<h1>내 시간표<span class="pill" id="clock"></span></h1>
+<p class="sub">학교 수업 말고도 알바, 약속, 스터디 같은 일정을 직접 추가할 수 있어요. 일정은 <b>이 브라우저에만</b> 저장돼요(서버로 보내지 않아요).</p>
+
+<div class="banner" id="banner"></div>
+<div class="bar"><button class="btn ghost" id="prev" type="button">← 이전 주</button><b id="label">이번 주 (반복 일정)</b><button class="btn ghost" id="next" type="button">다음 주 →</button><button class="btn ghost" id="this" type="button">이번 주</button>
+<button class="btn" id="add" type="button">+ 일정 추가</button></div>
+
+<div class="week" id="week">__STATIC__</div>
+<div id="noscript-note">지금은 미리보기예요. 일정 추가·수정은 <b>크롬이나 엣지에서 이 파일을 직접 열었을 때</b> 동작해요. 수업 시간은 직접 입력해 주세요.</div>
+
+<section class="card" id="form" hidden>
+<h2 id="ftitle">일정 추가</h2>
+<form id="f" autocomplete="off">
+<label for="title">제목</label><input type="text" id="title" required maxlength="60" placeholder="예: 알바, 스터디, 병원">
+<div class="row"><div><label for="type">종류</label><select id="type"><option value="class">수업</option><option value="work">알바</option><option value="task">과제·마감</option><option value="etc" selected>기타</option></select></div>
+<div><label for="start">시작 시간</label><input type="time" id="start"></div><div><label for="end">끝나는 시간</label><input type="time" id="end"></div></div>
+<label>반복 방식</label>
+<div class="days"><label><input type="radio" name="mode" value="repeat" checked> 매주 반복</label><label><input type="radio" name="mode" value="date"> 특정 날짜 하루</label></div>
+<div id="m-repeat"><label>요일 선택</label><div class="days" id="dayboxes"></div></div>
+<div id="m-date" hidden><label for="date">날짜</label><input type="date" id="date"></div>
+<div class="row"><div><label for="place">장소 (선택)</label><input type="text" id="place" maxlength="40"></div><div><label for="memo">메모 (선택)</label><input type="text" id="memo" maxlength="80"></div></div>
+<div class="act"><button class="btn" type="submit" id="save">저장</button><button class="btn ghost" type="button" id="cancel">취소</button><button class="btn del" type="button" id="del" hidden>삭제</button></div>
+</form></section>
+
+<div class="card"><h2>관리</h2>
+<p class="m">수업 시간을 직접 고치려면 일정을 눌러 수정하세요. 시작·끝 시간을 비워 두면 "시간 미정"으로 표시돼요.</p>
+<div class="act"><button class="btn ghost" id="seed" type="button">예시 일정으로 되돌리기</button><button class="btn del" id="clear" type="button">모든 일정 지우기</button></div></div>
+<p class="m" style="margin-top:16px">학교 시간표를 자동으로 가져오지는 않아요. 사이버캠퍼스에는 수업 시간표가 없어서, 종합정보시스템의 시간표를 보고 직접 입력해 주세요. 일정은 이 브라우저에 저장돼서 브라우저를 바꾸거나 기록을 지우면 사라져요.</p>
+</div>
+<script src="내데이터.js"></script>
+<script>
+(function(){
+var DAYS=['월','화','수','목','금','토','일'];
+var TYPES={class:'c-class',work:'c-work',task:'c-task',etc:'c-etc',sch:'c-sch'};
+var KEY='내시간표_일정_v1';
+var SEED=__SEED__;
+function $(i){return document.getElementById(i);}
+function clone(x){return JSON.parse(JSON.stringify(x));}
+var mem=null;
+function migrate(v){
+  var VER='2026-11-17-수업시간표',applied='';
+  try{applied=localStorage.getItem('내시간표_시드')||'';}catch(e){}
+  if(applied===VER)return v;
+  var have={};v.forEach(function(e){have[e.id]=1;});
+  v=v.filter(function(e){return !/^s[1-6]$/.test(e.id);});
+  SEED.forEach(function(e){if(/^c\d+$/.test(e.id)&&!have[e.id])v.push(clone(e));});
+  try{localStorage.setItem('내시간표_시드',VER);localStorage.setItem(KEY,JSON.stringify(v));}catch(e){}
+  return v;
+}
+function cleanWork(v){
+  var applied='';try{applied=localStorage.getItem('내시간표_알바정리')||'';}catch(e){}
+  if(applied==='1')return v;
+  v=v.filter(function(e){return e.type!=='work';});
+  try{localStorage.setItem('내시간표_알바정리','1');localStorage.setItem(KEY,JSON.stringify(v));}catch(e){}
+  return v;
+}
+function load(){try{var s=localStorage.getItem(KEY);if(s){var v=JSON.parse(s);if(Array.isArray(v))return cleanWork(migrate(v));}}catch(e){}return cleanWork(migrate(mem||clone(SEED)));}
+var ev=load();
+var sch=[];try{var D0=window.MY_DATA;if(D0&&D0.schedule){D0.schedule.forEach(function(e,i){sch.push({id:'n'+i,title:'📢 '+e.title,type:'sch',days:[],date:e.d,start:e.t||'',end:'',place:'',memo:'공지에서 찾음 · 확인 필요',ro:true,h:e.h});});}}catch(x){}
+function save(){mem=ev;try{localStorage.setItem(KEY,JSON.stringify(ev));}catch(e){}}
+function mondayOf(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x;}
+function iso(d){var p=function(n){return String(n).padStart(2,'0');};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var ws=mondayOf(new Date());var editing=null;
+function pad(n){return String(n).padStart(2,'0');}
+function fmtDur(ms){var m=Math.max(1,Math.ceil(ms/60000)),d=Math.floor(m/1440),h=Math.floor(m%1440/60),mm=m%60,a=[];if(d)a.push(d+'일');if(h)a.push(h+'시간');if(mm||!a.length)a.push(mm+'분');return a.join(' ');}
+function atTime(d,t,plus){var p=t.split(':');return new Date(d.getFullYear(),d.getMonth(),d.getDate(),+p[0]+(plus||0),+p[1]);}
+function endOf(e,d){return e.end?atTime(d,e.end):atTime(d,e.start,1);}
+function eventsFor(d){var di=(d.getDay()+6)%7,s=iso(d);
+  return ev.concat(sch).filter(function(e){return e.date?e.date===s:(e.days||[]).indexOf(di)>=0;}).sort(function(a,b){if(!a.start&&b.start)return -1;if(a.start&&!b.start)return 1;return (a.start||'').localeCompare(b.start||'');});}
+function updateBanner(){
+  var now=new Date(),b=$('banner'),names=['일','월','화','수','목','금','토'];
+  $('clock').textContent=(now.getMonth()+1)+'/'+now.getDate()+'('+names[now.getDay()]+') '+pad(now.getHours())+':'+pad(now.getMinutes());
+  var ong=null,up=null;
+  for(var off=0;off<=7;off++){var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+off);
+    eventsFor(d).forEach(function(e){
+      if(!e.start||e.type==='task')return;
+      var s=atTime(d,e.start),en=endOf(e,d);
+      if(off===0&&now>=s&&now<en&&!ong){ong={e:e,end:en};}
+      if(s>now&&!up){up={e:e,start:s,off:off,d:d};}
+    });}
+  b.className='banner'+(ong?' live':'');
+  if(ong){b.innerHTML='<div class="t1">🟢 지금 진행 중</div><div class="t2">'+esc(ong.e.title)+' · 종료까지 '+fmtDur(ong.end-now)+' 남음</div>';}
+  else if(up){var day=up.off===0?'오늘':(up.off===1?'내일':names[up.d.getDay()]+'요일');b.innerHTML='<div class="t1">⏰ 다음 일정 ('+day+' '+up.e.start+')</div><div class="t2">'+esc(up.e.title)+' · '+fmtDur(up.start-now)+' 후 시작</div>';}
+  else{b.innerHTML='<div class="t1">📅 일정 안내</div><div class="t2">시간이 정해진 일정이 없어요. 일정에 시작 시간을 넣으면 여기에 남은 시간이 나와요.</div>';}
+}
+function render(){
+  var today=iso(new Date()),h='';
+  for(var i=0;i<7;i++){var d=new Date(ws.getFullYear(),ws.getMonth(),ws.getDate()+i);var items=eventsFor(d);
+    h+='<div class="col'+(iso(d)===today?' today':'')+'"><h3>'+DAYS[i]+' <small>'+(d.getMonth()+1)+'/'+d.getDate()+'</small></h3>';
+    h+=items.length?items.map(function(e){var t=e.start?(e.start+(e.end?'~'+e.end:'')):'시간 미정';
+      var stc='',stt='';
+      if(iso(d)===today&&e.start&&e.type!=='task'){var s0=atTime(d,e.start),en0=endOf(e,d),nw=new Date();
+        if(nw<s0){stc=' st-upcoming';stt='⏳ 시작까지 '+fmtDur(s0-nw);}else if(nw<en0){stc=' st-ongoing';stt='🟢 진행 중 · 종료까지 '+fmtDur(en0-nw);}else{stc=' st-done';stt='✅ 종료';}}
+      return '<a class="ev '+(TYPES[e.type]||'c-etc')+stc+'" data-id="'+esc(e.id)+'"'+(e.ro?' data-ro="1" target="_blank" rel="noopener noreferrer" href="'+esc(e.h)+'"':' href="#form"')+'><b>'+esc(e.title)+'</b><span>'+esc(t)+(e.place?' · '+esc(e.place):'')+'</span>'+(stt?'<span class="stt">'+stt+'</span>':'')+(e.memo?'<span>'+esc(e.memo)+'</span>':'')+'</a>';}).join(''):'<div class="none">일정 없음</div>';
+    h+='</div>';}
+  $('week').innerHTML=h;
+  var end=new Date(ws.getFullYear(),ws.getMonth(),ws.getDate()+6);
+  $('label').textContent=iso(ws)+' ~ '+iso(end);
+  var n=$('noscript-note');if(n)n.hidden=true;
+  updateBanner();
+}
+function showForm(e){editing=e?e.id:null;$('form').hidden=false;$('ftitle').textContent=e?'일정 수정':'일정 추가';$('del').hidden=!e;
+  $('title').value=e?e.title:'';$('type').value=e?e.type:'etc';$('start').value=e?e.start:'';$('end').value=e?e.end:'';
+  $('place').value=e?e.place:'';$('memo').value=e?e.memo:'';$('date').value=e&&e.date?e.date:iso(new Date());
+  var mode=e&&e.date?'date':'repeat';document.querySelector('input[name=mode][value='+mode+']').checked=true;modeUI();
+  [].forEach.call(document.querySelectorAll('#dayboxes input'),function(c){c.checked=!!(e&&e.days&&e.days.indexOf(+c.value)>=0);});
+  $('form').scrollIntoView&&$('form').scrollIntoView({block:'center'});$('title').focus();}
+function modeUI(){var m=document.querySelector('input[name=mode]:checked').value;$('m-repeat').hidden=m!=='repeat';$('m-date').hidden=m!=='date';}
+$('dayboxes').innerHTML=DAYS.map(function(d,i){return '<label><input type="checkbox" value="'+i+'"> '+d+'</label>';}).join('');
+[].forEach.call(document.querySelectorAll('input[name=mode]'),function(r){r.addEventListener('change',modeUI);});
+$('add').onclick=function(){showForm(null);};
+$('cancel').onclick=function(){$('form').hidden=true;editing=null;};
+$('week').addEventListener('click',function(e){var a=e.target.closest('.ev');if(!a)return;if(a.getAttribute('data-ro'))return;e.preventDefault();var id=a.getAttribute('data-id');var f=ev.filter(function(x){return x.id===id;})[0];if(f)showForm(f);});
+$('f').addEventListener('submit',function(e){e.preventDefault();
+  var title=$('title').value.trim();if(!title){alert('제목을 입력해 주세요.');return;}
+  var mode=document.querySelector('input[name=mode]:checked').value;var days=[],date='';
+  if(mode==='repeat'){[].forEach.call(document.querySelectorAll('#dayboxes input:checked'),function(c){days.push(+c.value);});if(!days.length){alert('요일을 하나 이상 골라 주세요.');return;}}
+  else{date=$('date').value;if(!date){alert('날짜를 골라 주세요.');return;}}
+  var s=$('start').value,en=$('end').value;if(s&&en&&en<=s){alert('끝나는 시간은 시작 시간보다 늦어야 해요.');return;}
+  var o={id:editing||('e'+Date.now()),title:title,type:$('type').value,days:days,date:date,start:s,end:en,place:$('place').value.trim(),memo:$('memo').value.trim()};
+  if(editing){ev=ev.map(function(x){return x.id===editing?o:x;});}else{ev.push(o);}
+  save();$('form').hidden=true;editing=null;if(date){var d=new Date(date+'T00:00');ws=mondayOf(d);}render();});
+$('del').onclick=function(){if(!editing)return;if(!confirm('이 일정을 삭제할까요?'))return;ev=ev.filter(function(x){return x.id!==editing;});save();$('form').hidden=true;editing=null;render();};
+$('prev').onclick=function(){ws=new Date(ws.getFullYear(),ws.getMonth(),ws.getDate()-7);render();};
+$('next').onclick=function(){ws=new Date(ws.getFullYear(),ws.getMonth(),ws.getDate()+7);render();};
+$('this').onclick=function(){ws=mondayOf(new Date());render();};
+$('seed').onclick=function(){if(!confirm('예시 일정으로 되돌릴까요? 직접 추가한 일정은 사라져요.'))return;ev=clone(SEED);save();render();};
+$('clear').onclick=function(){if(!confirm('모든 일정을 지울까요?'))return;ev=[];save();render();};
+render();
+setInterval(render,30000);
+})();
+</script></body></html>'''
+page = page.replace('__STATIC__', static).replace('__SEED__', json.dumps(SEED, ensure_ascii=False))
+if SITE:
+    import re as _re
+    page = page.replace('<script src="내데이터.js"></script>\n', '')
+    page = _re.sub(r'<div class="nav">.*?</div>', '<div class="nav"><a class="btn ghost" href="index.html">← 대시보드로</a></div>', page, count=1, flags=_re.S)
+    _out = os.path.join(ROOT, 'docs', '시간표.html')
+else:
+    _out = os.path.join(ROOT, '시간표.html')
+open(_out, 'w', encoding='utf-8', newline='\n').write(page)
+print('ok', len(page))

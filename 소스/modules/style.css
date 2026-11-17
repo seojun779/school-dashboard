@@ -1,0 +1,36 @@
+/* ===== 드라이브 · AI 작업실 ===== */
+.dr{display:grid;grid-template-columns:200px minmax(0,1fr);gap:14px;align-items:start}
+@media(max-width:900px){.dr{grid-template-columns:1fr}}
+.dr .side{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:8px}
+.dr .fold{display:flex;justify-content:space-between;gap:6px;width:100%;text-align:left;background:none;border:0;border-radius:9px;padding:8px 10px;font-size:.86rem;font-weight:600;color:var(--sub);cursor:pointer}
+.dr .fold:hover{background:var(--field);color:var(--ink)}.dr .fold[aria-current="true"]{background:var(--accbg);color:var(--acc2)}
+.dr .fold small{font-weight:700;opacity:.7}
+.drop{border:2px dashed var(--line);border-radius:var(--r);padding:16px;text-align:center;color:var(--sub);font-size:.86rem;cursor:pointer;background:var(--field)}
+.drop.on{border-color:var(--acc);background:var(--accbg);color:var(--acc2)}
+.fl{display:flex;align-items:center;gap:10px;padding:9px 4px;border-top:1px solid var(--line)}.fl:first-child{border-top:0}
+.fl .ic{flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:.72rem;font-weight:800;background:var(--blubg);color:var(--blu)}
+.fl .ic.pdf{background:var(--redbg);color:var(--red)}.fl .ic.ppt{background:var(--ambbg);color:var(--amb)}.fl .ic.doc{background:var(--blubg);color:var(--blu)}.fl .ic.img{background:var(--grnbg);color:var(--grn)}
+.fl .t{flex:1;min-width:0}.fl .t b{display:block;font-size:.88rem;word-break:break-all}.fl .t span{font-size:.74rem;color:var(--sub)}
+.badge{font-size:.66rem;font-weight:800;border-radius:999px;padding:1px 8px;background:var(--field);color:var(--sub);border:1px solid var(--line);white-space:nowrap}
+.badge.up{background:var(--grnbg);color:var(--grn);border-color:transparent}.badge.cy{background:var(--blubg);color:var(--blu);border-color:transparent}
+.pv{position:fixed;inset:0;background:rgba(15,20,23,.6);z-index:55;display:grid;place-items:center;padding:16px}.pv[hidden]{display:none}
+.pv .box{max-width:760px;max-height:86vh;overflow:auto}
+.pv pre{white-space:pre-wrap;word-break:break-word;font:inherit;font-size:.84rem;background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px;max-height:56vh;overflow:auto}
+.aibar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--sub)}.dot.ok{background:var(--grn)}.dot.no{background:var(--red)}
+.ta{width:100%;border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:10px;padding:9px 11px;font:inherit;font-size:.88rem;resize:vertical;outline:none}
+.ta:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
+.out{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.9rem;line-height:1.65;white-space:pre-wrap;word-break:break-word;min-height:60px}
+.out code,.out pre{background:rgba(127,127,127,.15);border-radius:6px;padding:1px 5px;font-family:Consolas,monospace;font-size:.84rem}
+.out pre{display:block;padding:8px 10px;overflow:auto;white-space:pre}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{display:inline-flex;gap:6px;align-items:center;background:var(--accbg);color:var(--acc2);border-radius:999px;padding:3px 10px;font-size:.76rem;font-weight:700}
+.chip button{border:0;background:none;cursor:pointer;color:inherit;font-weight:800;padding:0}
+.slides{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.sl{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:6px}
+.sl .n{font-size:.7rem;font-weight:800;color:var(--acc2)}
+.sl input{width:100%;font-weight:700}.sl textarea{min-height:92px}
+.stage{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px;overflow:auto;text-align:center;min-height:160px}
+.stage svg{max-width:100%;height:auto}
+.mini{font-size:.74rem;color:var(--sub)}
+#mentionBox{position:absolute;z-index:20;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);max-height:180px;overflow:auto;min-width:220px}
+#mentionBox button{display:block;width:100%;text-align:left;background:none;border:0;padding:7px 10px;font-size:.82rem;cursor:pointer}#mentionBox button:hover{background:var(--accbg)}
