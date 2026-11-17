@@ -3,17 +3,18 @@
   function startRun(key,p){runs[key]=p;}
   function stopRun(key){if(runs[key]&&runs[key].abort)runs[key].abort();}
 
-  /* 탭 */
-  $('aiTabs').addEventListener('click',function(e){
-    var b=e.target.closest('button');if(!b)return;var t=b.getAttribute('data-t');
-    [].forEach.call($('aiTabs').children,function(x){x.setAttribute('aria-pressed',String(x===b));});
-    ['solve','ppt','viz','canvas'].forEach(function(k){$('p-'+k).hidden=(k!==t);});
-  });
+  /* 탭: 질문 · 문제 풀이 · 연습문제 · PPT · 시각화 · 캔버스 */
+  function aiMode(t){
+    [].forEach.call($('aiTabs').children,function(x){x.setAttribute('aria-pressed',String(x.getAttribute('data-t')===t));});
+    ['chat','solve','quiz','ppt','viz','canvas'].forEach(function(k){$('p-'+k).hidden=(k!==t);});
+  }
+  window.__aiMode=aiMode;
+  $('aiTabs').addEventListener('click',function(e){var b=e.target.closest('button');if(b)aiMode(b.getAttribute('data-t'));});
+  $('aiSetBtn').onclick=function(){$('aiSet').hidden=!$('aiSet').hidden;};
   $('aiHelpBtn').onclick=function(){$('aiHelp').hidden=!$('aiHelp').hidden;};
   $('aiRefresh').onclick=function(){aiConnect();};
   $('aiModel').onchange=function(){AI.model=this.value;aiSave();};
   $('aiVision').onchange=function(){AI.vision=this.value;aiSave();};
-  ['svCourse','ppCourse','vzCourse'].forEach(function(id){courseOptions($(id));});
 
   /* ---------------- 문제 풀이 ---------------- */
   var svImgs=[];
@@ -26,8 +27,8 @@
   $('svRun').onclick=function(){
     var q=$('svQ').value.trim();if(!q&&!svImgs.length){$('svMeta').textContent='문제를 입력하거나 이미지를 첨부해 주세요';return;}
     if(needAi('svMeta'))return;
-    var mode=$('svMode').value,course=$('svCourse').value||null;
-    var rag=$('svRag').checked?ragBlock(q||'문제',course,ATT.sv,3600):{text:'',sources:[]};
+    var mode=$('svMode').value,course=$('aiC').value||null;
+    var rag=$('ragOn').checked?ragBlock(q||'문제',course,ATT.all,3600):{text:'',sources:[]};
     var modeTxt={step:'문제를 이해한 뒤 단계별로 자세히 풀고, 마지막 줄에 "정답:"으로 결론을 쓴다.',short:'핵심만 간단히 풀고, 마지막 줄에 "정답:"으로 결론을 쓴다.',check:'답을 먼저 구하고, 다른 방법으로 한 번 검산한 뒤, 마지막 줄에 "정답:"으로 결론을 쓴다.'}[mode];
     var sys='너는 대학 소프트웨어융합학과 학생의 문제 풀이를 돕는 조교다. '+POLICY+' '+modeTxt+' 코드나 수식은 코드블록으로 쓴다.';
     var user=(rag.text?'[강의자료]\n'+rag.text+'\n\n':'')+'[문제]\n'+(q||'(첨부한 이미지의 문제를 풀어 주세요)');
@@ -64,8 +65,8 @@
   $('ppRun').onclick=function(){
     var q=$('ppQ').value.trim();if(!q){$('ppMeta').textContent='발표 주제를 입력해 주세요';return;}
     if(needAi('ppMeta'))return;
-    var n=Math.max(3,Math.min(15,parseInt($('ppN').value,10)||8)),course=$('ppCourse').value||null;
-    var rag=$('ppRag').checked?ragBlock(q,course,ATT.pp,4200):{text:'',sources:[]};
+    var n=Math.max(3,Math.min(15,parseInt($('ppN').value,10)||8)),course=$('aiC').value||null;
+    var rag=$('ragOn').checked?ragBlock(q,course,ATT.all,4200):{text:'',sources:[]};
     var sys='너는 발표 자료를 구성하는 조교다. '+POLICY+' 반드시 JSON 하나만 출력한다. 형식: {"title":"발표 제목","subtitle":"부제목","slides":[{"title":"슬라이드 제목","bullets":["핵심 문장","핵심 문장"],"notes":"발표할 때 할 말"}]}. 슬라이드는 정확히 '+n+'개, 슬라이드마다 bullets는 '+($('ppTone').value==='short'?'3~4개의 짧은 문장':'4~6개의 문장')+'으로 쓴다. 자료에 없는 내용을 추가할 때는 bullets 문장 끝에 " (추론)" 또는 " (일반 지식)"을 붙인다.';
     var user=(rag.text?'[강의자료]\n'+rag.text+'\n\n':'')+'[발표 주제]\n'+q;
     setBusy('pp',true);$('ppMeta').textContent=AI.model+' 로 구성 중…';$('ppPrev').innerHTML='<div class="out">구성하는 중…</div>';
@@ -127,7 +128,7 @@
   function vzGen(extra){
     var q=$('vzQ').value.trim();if(!q){$('vzMeta').textContent='무엇을 그릴지 적어 주세요';return;}
     if(needAi('vzMeta'))return;
-    vz.kind=$('vzKind').value;var course=$('vzCourse').value||null,rag=$('vzRag').checked&&vz.kind!=='chart'?ragBlock(q,course,[],2400):{text:'',sources:[]};
+    vz.kind=$('vzKind').value;var course=$('aiC').value||null,rag=$('ragOn').checked&&vz.kind!=='chart'?ragBlock(q,course,ATT.all,2400):{text:'',sources:[]};
     var sys,user,json=false;
     if(vz.kind==='chart'){
       json=true;sys='너는 데이터 차트를 설계하는 조교다. 반드시 JSON 하나만 출력한다. 형식: {"type":"bar|line|pie|doughnut","title":"제목","labels":["라벨"],"datasets":[{"label":"이름","data":[숫자]}]}. 사용자가 적어 준 수치만 사용하고 없는 수치를 만들어 내지 않는다.';
@@ -180,7 +181,18 @@
   $('cvSvg').onclick=function(){if(cv.svg)dlBlob('캔버스.svg',new Blob([cv.svg],{type:'image/svg+xml'}));};
   $('cvPng').onclick=function(){if(cv.svg)svgToPng(cv.svg,cv.w,cv.h,'캔버스.png').catch(function(e){$('cvMeta').textContent='⚠ '+e.message;});};
 
-  window.__aiDraw=function(){if(!AI._tried){AI._tried=1;aiConnect();}courseOptions($('svCourse'));courseOptions($('ppCourse'));courseOptions($('vzCourse'));};
+  /* ---------------- 연습문제 (채팅의 문제 만들기를 재사용) ---------------- */
+  $('qzRun').onclick=function(){
+    var h=window.__quiz.html($('aiC').value||null,+$('qzN').value||6);
+    $('qzOut').innerHTML=(typeof h==='string')?h:(h&&h.html)||'<div class="empty">문제를 만들지 못했어요</div>';
+  };
+  $('qzWrong').onclick=function(){$('qzOut').innerHTML=window.__quiz.wrong();};
+  $('qzOut').addEventListener('click',function(e){
+    if(window.__quiz.click(e))return;
+    var s=e.target.closest('[data-show]');if(s){var a=s.parentNode.querySelector('.ans');if(a)a.style.display='inline';s.hidden=true;return;}
+    if(e.target.closest('[data-wrongclear]')){lsSet('도우미_오답',[]);$('qzOut').innerHTML='<div class="empty">오답 노트를 비웠어요.</div>';}
+  });
+  window.__aiDraw=function(){if(!AI._tried){AI._tried=1;aiConnect();}};
   window.__aiTest={aiChat:aiChat,AI:AI,cleanSvg:cleanSvg,parseJsonLoose:parseJsonLoose};
   window.__aiExplain=function(q,ctx,el,done){
     function go(){

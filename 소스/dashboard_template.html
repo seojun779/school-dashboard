@@ -119,10 +119,8 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
     <button class="nav" data-s="tasks">✅ 과제 · 출석 <span class="n" id="nTask" hidden></span></button>
     <button class="nav" data-s="time">🗓️ 시간표</button>
     <button class="nav" data-s="gpa">🎯 학점 계산기</button>
-    <button class="nav" data-s="mat">📚 강의자료</button>
     <button class="nav" data-s="drive">📁 드라이브</button>
-    <button class="nav" data-s="study">✨ 공부 도우미</button>
-    <button class="nav" data-s="ai">🧠 AI 작업실</button>
+    <button class="nav" data-s="study">🤖 AI 도우미</button>
     <div class="sp"></div>
     <div class="meta" id="upd"></div>
     <button class="nav" id="syncBtn" type="button">🔄 로그인하고 업데이트</button>
@@ -159,9 +157,9 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
     </section>
 
     <section class="sec" id="s-time">
-      <div class="top"><div><h1>시간표</h1><p id="tRange"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="wPrev" type="button">← 이전 주</button><button class="btn ghost" id="wNow" type="button">이번 주</button><button class="btn ghost" id="wNext" type="button">다음 주 →</button><a class="btn" href="시간표.html">일정 추가 · 편집</a></div></div>
+      <div class="top"><div><h1>시간표</h1><p id="tRange"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="wPrev" type="button">← 이전 주</button><button class="btn ghost" id="wNow" type="button">이번 주</button><button class="btn ghost" id="wNext" type="button">다음 주 →</button><button class="btn" id="ttAdd" type="button">+ 일정 추가</button></div></div>
       <div id="grid"></div>
-      <p class="sub" style="margin-top:10px">파랑은 수업, 초록은 개인 일정, 빨강은 공지에서 찾은 일정이에요. 시간이 없는 일정은 맨 위 줄에 나와요.</p>
+      <p class="sub" style="margin-top:10px">파랑은 수업, 초록은 개인 일정, 빨강은 공지에서 찾은 일정이에요. 일정을 누르면 고치거나 지울 수 있고, 시간이 없는 일정은 맨 위 줄에 나와요.</p>
     </section>
 
     <section class="sec" id="s-gpa">
@@ -180,31 +178,7 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
       <p class="sub" style="font-size:.76rem;margin-top:12px">평점 = Σ(학점 × 점수) ÷ Σ(학점). A+ 4.5 · A0 4.0 · B+ 3.5 · B0 3.0 · C+ 2.5 · C0 2.0 · D+ 1.5 · D0 1.0 · F 0. 근거: <a href="https://www.shinhan.ac.kr/kr/242/subview.do" target="_blank" rel="noopener noreferrer">졸업심사기준</a> · <a href="https://www.shinhan.ac.kr/ce/7461/subview.do" target="_blank" rel="noopener noreferrer">2023학번 졸업조건</a></p>
     </section>
 
-    <section class="sec" id="s-mat">
-      <div class="top"><div><h1>강의자료</h1><p id="matNote">과목을 고르면 주차 순서로 보여 줘요</p></div></div>
-      <div class="card"><div class="pills" id="cPills"></div><div id="matBody"></div></div>
-    </section>
-
-    <section class="sec" id="s-study">
-      <div class="top"><div><h1>공부 도우미</h1><p>내 강의자료를 바탕으로 대화하듯 물어보세요 (Claude 없이 이 기기에서 동작)</p></div></div>
-      <div class="card">
-        <div class="bar"><select id="aiC"></select><span class="sub" id="aiCnt" style="font-size:.78rem"></span></div>
-        <div id="chat"></div>
-        <div class="bar" style="margin-top:10px"><button class="pill" type="button" data-sug="이 과목 요약해줘">요약해줘</button><button class="pill" type="button" data-sug="문제 내줘">문제 내줘</button><button class="pill" type="button" data-sug="핵심 키워드 알려줘">핵심 키워드</button><button class="pill" type="button" id="clSync" title="claude.ai의 내 대화를 자동으로 학습해요">🔄 Claude 대화 학습</button></div>
-        <form class="bar" id="chatForm" style="flex-wrap:nowrap"><input id="chatIn" type="text" autocomplete="off" style="flex:1;min-width:0" placeholder="질문을 입력하세요 (예: 세션이 뭐야?)"><button class="btn" type="submit">보내기</button></form>
-        <label class="sub" style="font-size:.72rem;display:inline-flex;gap:5px;align-items:center"><input type="checkbox" id="aiClaude"> Claude 토큰 사용</label> <label class="sub" style="font-size:.72rem;display:inline-flex;gap:5px;align-items:center;margin-left:10px"><input type="checkbox" id="aiWiki" checked> 자료에 없으면 위키백과 검색 (무료)</label> <label class="sub" style="font-size:.72rem;display:inline-flex;gap:5px;align-items:center;margin-left:10px"><input type="checkbox" id="aiSem"> 의미 검색 (내 PC에서 실행 · 처음 약 120MB)</label> <span class="sub" id="aiSemSt" style="font-size:.72rem"></span>
-        <div class="sub" style="font-size:.72rem;margin-top:6px;line-height:1.5">📌 <b>답변 기준</b> ① 강의자료 → ② 이전 Claude 대화(Claude가 분석한 강의 내용) → ③ 강의자료 밖 외부 자료(별도 표시). 자료에 없는 내용은 추측하지 않고, 다른 근거를 쓰면 그렇다고 표시해요.</div>
-        <details id="clImp" style="margin-top:10px"><summary class="sub" style="font-size:.78rem;cursor:pointer">Claude 대화 학습시키기 (클로드로 받은 설명이나 자료를 여기에 학습)</summary>
-          <div style="margin-top:8px;display:grid;gap:8px">
-            <div class="sub" style="font-size:.76rem">① Claude에서 받은 답을 붙여넣거나 ② claude.ai의 "데이터 내보내기"로 받은 <b>conversations.json</b>(또는 .txt/.md)을 선택해 주세요. 이 기기에만 저장돼요.</div>
-            <input id="clTitle" type="text" placeholder="제목 또는 질문 (선택)">
-            <textarea id="clText" rows="4" placeholder="여기에 Claude의 답변이나 강의 내용을 붙여넣기" style="border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:9px;padding:8px;font-family:inherit;font-size:.86rem;resize:vertical"></textarea>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn sm" type="button" id="clSave">학습시키기</button><input id="clFile" type="file" accept=".json,.txt,.md" style="font-size:.78rem"><button class="btn sm red" type="button" id="clClear">Claude 대화 학습 지우기</button><span class="sub" id="clMsg" style="font-size:.78rem"></span></div>
-          </div></details>
-      </div>
-      <div class="card" style="margin-top:14px"><h2>다가오는 시험 · 평가 <small>공지에서 찾은 일정</small></h2><div id="exams"></div></div>
-    </section>
-    <!--__MODULE_HTML__-->
+            <!--__MODULE_HTML__-->
     <p class="foot" id="health" style="margin-top:14px"></p>
     <p class="foot" id="foot"></p>
   </main>
@@ -434,7 +408,7 @@ function __main(){
     if(s==='time')drawGrid();
     if(s==='gpa'&&window.__gpaDraw)window.__gpaDraw();
     if(s==='drive'&&window.__driveDraw)window.__driveDraw();
-    if(s==='ai'&&window.__aiDraw)window.__aiDraw();
+    if(s==='study'&&window.__aiDraw)window.__aiDraw();
   }
   [].forEach.call(document.querySelectorAll('.nav[data-s]'),function(b){b.onclick=function(){show(b.getAttribute('data-s'));};});
 
@@ -527,7 +501,7 @@ function __main(){
     function row(e){var d=new Date(e.d+'T00:00'),n=Math.round((d-T0)/86400000);return '<div class="row"><div class="tm">'+esc(e.d.slice(5).replace('-','/'))+'('+NM[d.getDay()]+')'+(e.t?' '+esc(e.t):'')+'</div><div class="t"><b>'+esc(e.title)+'</b><span>'+esc(e.p||'')+'</span></div><span class="tag '+(n<=4?'r':(n<=7?'a':''))+'">D-'+n+'</span><a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(e.h)+'">원문</a></div>';}
     $('sched').innerHTML=up.length?up.map(row).join(''):'<div class="empty">앞으로 남은 공지 일정이 없어요</div>';
     var ex=up.filter(function(e){return e.type==='exam';});
-    $('exams').innerHTML=ex.length?ex.map(row).join(''):'<div class="empty">공지에서 찾은 시험·평가 일정이 아직 없어요. 시간표에 직접 넣어 두면 챙기기 쉬워요.</div>';
+    if($('exams'))$('exams').innerHTML=ex.length?ex.map(row).join(''):'<div class="empty">공지에서 찾은 시험·평가 일정이 아직 없어요. 시간표에 직접 넣어 두면 챙기기 쉬워요.</div>';
     var ah='',any=false;
     if(has)D.courses.forEach(function(c){var w=(c.attend||[]).filter(function(x){return (x.vids&&x.vids.length)||x.mark;});if(!w.length)return;any=true;
       var bad=[];(c.attend||[]).forEach(function(x){(x.vids||[]).forEach(function(v){if(v.m&&v.m!=='O')bad.push(x.w+'주차 · '+v.n+' · '+v.m);});});
@@ -549,10 +523,10 @@ function __main(){
     for(var c=0;c<ndays;c++){(function(c){var d=new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+c),isT=iso(d)===iso(n);
       hd+='<div class="'+(isT?'td':'')+'">'+DN[c]+'<small>'+(d.getMonth()+1)+'/'+d.getDate()+'</small></div>';
       var es=evs[c],timed=es.filter(function(e){return e.start;}),untimed=es.filter(function(e){return !e.start;});
-      un+='<div>'+untimed.map(function(e){return e.ro?'<a class="chipu" target="_blank" rel="noopener noreferrer" href="'+esc(e.h)+'">'+esc(e.title)+'</a>':'<span class="chipu">'+esc(e.title)+'</span>';}).join('')+'</div>';
+      un+='<div>'+untimed.map(function(e){return e.ro?'<a class="chipu" target="_blank" rel="noopener noreferrer" href="'+esc(e.h)+'">'+esc(e.title)+'</a>':'<span class="chipu" data-eid="'+esc(e.id)+'" style="cursor:pointer">'+esc(e.title)+'</span>';}).join('')+'</div>';
       var lanes=[];timed.forEach(function(e){var s=at(d,e.start),en=endOf(e,d),l=0;while(lanes[l]&&lanes[l]>s)l++;lanes[l]=en;e._l=l;});var L=Math.max(1,lanes.length);
       var blocks=timed.map(function(e){var s=at(d,e.start),en=endOf(e,d),top=((s.getHours()*60+s.getMinutes())-hh0*60)*HH/60,h=Math.max(24,((en-s)/60000)*HH/60-2),w=100/L,live=isT&&n>=s&&n<en;
-        var tag=e.ro?'a':'div',attr=e.ro?' href="'+esc(e.h)+'" target="_blank" rel="noopener noreferrer"':'';
+        var tag=e.ro?'a':'div',attr=e.ro?' href="'+esc(e.h)+'" target="_blank" rel="noopener noreferrer"':' data-eid="'+esc(e.id)+'" title="눌러서 고치기"';
         return '<'+tag+' class="blk '+(e.type==='work'?'work':(e.type==='etc'?'etc':(e.type==='notice'?'notice':'')))+(live?' on':'')+'" style="top:'+top+'px;height:'+h+'px;left:calc('+(e._l*w)+'% + 2px);width:calc('+w+'% - 4px)"'+attr+'><b>'+esc(e.title)+'</b>'+esc(e.start+(e.end?'~'+e.end:''))+(e.place&&h>44?'<br>'+esc(e.place):'')+'</'+tag+'>';}).join('');
       var nl='';if(isT){var m=(n.getHours()*60+n.getMinutes())-hh0*60;if(m>=0&&m<=(hh1-hh0)*60)nl='<div class="nowl" style="top:'+(m*HH/60)+'px"></div>';}
       cols+='<div class="tgc'+(isT?' td':'')+'" style="--hh:'+HH+'px;height:'+H+'px">'+blocks+nl+'</div>';})(c);}
@@ -566,27 +540,7 @@ function __main(){
   function weekOf(s){var m=String(s||'').match(/(\d+)\s*주/);return m?+m[1]:null;}
   function wkn(m){if(m.ord!=null)return m.ord;var w=weekOf(m.wk);if(w!=null)return w;if(m.wk&&/공통|개요|오리엔/.test(m.wk))return 0;w=weekOf(m.from);if(w!=null)return w;w=weekOf(m.f||m.n);if(w!=null)return w;if(/중간고사|기말|시험/.test((m.from||'')+' '+(m.f||m.n)))return 99;return 98;}
   function wl(w){return w===0?'공통':(w===98?'주차 확인 필요':(w===99?'시험':w+'주차'));}
-  function mats(){
-    if(!has){$('matBody').innerHTML='<div class="empty">데이터가 없어요. 왼쪽 아래 "로그인하고 업데이트"를 눌러 주세요</div>';return;}
-    [].forEach.call(document.querySelectorAll('.pill'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-c')===sel));});
-    var c=D.courses.filter(function(x){return x.folder===sel;})[0];
-    if(!c){$('matBody').innerHTML='<div class="empty">위에서 과목을 골라 주세요</div>';return;}
-    var have={};(c.mat||[]).forEach(function(m){if(m.f)have[norm(m.f)]=1;});
-    var lm=(window.LOCAL_MATS||[]).filter(function(x){return x.folder===c.folder&&!have[norm(x.f)];}).map(function(x){return {wk:'',n:x.n,f:x.f,h:'',k:'파일',loc:true,from:'내 PC',ord:x.ord,lab:x.lab};});
-    var items=(c.mat||[]).concat(lm).map(function(m){return {m:m,w:wkn(m)};}).sort(function(a,b){return a.w-b.w;});
-    $('matNote').textContent=c.name+' · 자료 '+items.length+'개';
-    var h='<div style="margin-bottom:6px"><a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="https://cyber.shinhan.ac.kr/course/view.php?id='+encodeURIComponent(c.id)+'">학교 강의실 열기</a></div>',last=null;
-    if(!items.length)h+='<div class="empty">이 강의에는 올라온 강의자료가 없어요</div>';
-    var today=iso(new Date());
-    items.forEach(function(x){var m=x.m;var lbl=m.lab||wl(x.w);if(lbl!==last){h+='<div class="grp">'+esc(lbl)+'</div>';last=lbl;}
-      var isF=!!m.f,u=isF&&m.loc?'첨부파일/'+encodeURIComponent(c.folder)+'/'+encodeURIComponent(m.f):m.h,rec=m.add&&(new Date(today)-new Date(m.add))/86400000<=7;
-      h+='<div class="file"><div class="t"><b>'+esc(m.n||m.f)+(rec?' <span class="tag a">새 자료</span>':'')+'</b><span>'+esc(m.k||'파일')+(isF?' · '+esc(m.f):'')+' · '+(m.loc?'내 폴더에 있음':'학교 사이트에서 열기')+'</span></div><a class="btn sm" target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+(m.loc?'열기':'학교 사이트')+'</a></div>';});
-    var ps=(D.posts||[]).filter(function(p){return p.c===c.name;});
-    if(ps.length){h+='<div class="grp">게시판 글 ('+ps.length+')</div>'+ps.map(function(p){return '<div class="file"><div class="t"><b>'+esc(p.t)+'</b><span>'+esc(p.b||'게시판')+' · '+esc(p.d||'')+(p.a?' · '+esc(p.a):'')+'</span></div><a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(p.h)+'">글 보기</a></div>';}).join('');}
-    $('matBody').innerHTML=h;
-  }
-  $('cPills').innerHTML=has?D.courses.map(function(c){return '<button type="button" class="pill" data-c="'+esc(c.folder)+'" aria-pressed="false">'+esc(c.folder)+'</button>';}).join(''):'';
-  $('cPills').addEventListener('click',function(e){var b=e.target.closest('.pill');if(b){sel=b.getAttribute('data-c');mats();}});
+  function mats(){}
   sel=has&&D.courses[0]?D.courses[0].folder:null;
 
 
@@ -638,6 +592,15 @@ function __main(){
     }
     window.__kbRefresh=function(){idxCache=null;cidxCache=null;DOCS=docs();rebuildCourses();setTimeout(semTopUp,0);};
     var MENTION_ONLY=null;
+    window.__quiz={
+      html:function(c,n){
+        var att=(typeof ATT!=='undefined'&&ATT.all.length&&window.__driveFiles)?window.__driveFiles().filter(function(f){return ATT.all.indexOf(f.id)>=0;}):[];
+        if(att.length){MENTION_ONLY={};att.forEach(function(f){MENTION_ONLY[f.n]=1;});}
+        try{return answerQuiz(c,n);}finally{MENTION_ONLY=null;}
+      },
+      click:function(e){return quizClick(e);},
+      wrong:function(){return showWrong();}
+    };
     window.__rag=function(q,course,max){
       var res=searchChunks(q,course||null,null,'lec'),out=[];
       for(var i=0;i<res.length&&out.length<(max||6);i++){if(res[i].s>=2&&res[i].cov>=0.25)out.push({title:res[i].ch.title,text:res[i].ch.text,src:res[i].ch.c+' · '+res[i].ch.n});}
@@ -652,7 +615,7 @@ function __main(){
       return hit;
     }
     function inScope(c){return function(x){return !c||x.c===c||x.c===CLC;};}
-    function onlyCourse(c){return function(x){return x.c!==CLC&&(!c||x.c===c);};}
+    function onlyCourse(c){return function(x){return x.c!==CLC&&(!c||x.c===c)&&(!MENTION_ONLY||!!MENTION_ONLY[x.n]);};}
     function srcLine(list){var m={};list.forEach(function(x){m[(x.c===CLC?'이전 Claude 대화':x.c)+' · '+x.n]=1;});return '<div class="sub" style="font-size:.74rem;margin-top:6px">출처: '+Object.keys(m).slice(0,4).map(esc).join(' / ')+'</div>';}
     function claudeBtn(q){return '<div style="margin-top:8px"><button class="btn sm ghost" type="button" data-claude="'+esc(q)+'">Claude에게 질문하기 ↗</button></div>';}
     function claudeHint(q){return $('aiClaude').checked?claudeBtn(q):'<div class="sub" style="font-size:.78rem;margin-top:6px">더 정확한 답이 필요하면 아래 <b>Claude 토큰 사용</b>을 체크해 Claude에게 물어보세요.</div>';}
@@ -1090,11 +1053,12 @@ function __main(){
       q=String(q||'').trim();if(!q)return;
       add('me',esc(q));
       var men=(window.__driveFiles?window.__driveFiles():[]).filter(function(f){return q.indexOf('@'+f.n)>=0;});
-      if(men.length){MENTION_ONLY={};men.forEach(function(f){MENTION_ONLY[f.n]=1;q=q.split('@'+f.n).join(' ');});q=q.trim()||'핵심 내용 알려줘';}
+      var att=(typeof ATT!=='undefined'&&ATT.all.length&&window.__driveFiles)?window.__driveFiles().filter(function(f){return ATT.all.indexOf(f.id)>=0;}):[];
+      if(men.length||att.length){MENTION_ONLY={};men.concat(att).forEach(function(f){MENTION_ONLY[f.n]=1;q=q.split('@'+f.n).join(' ');});q=q.trim()||'핵심 내용 알려줘';}
       var w=add('bot','<span class="sub">자료에서 찾는 중…</span>');
       setTimeout(function(){var r;try{r=reply(q);}catch(e){r={html:'답을 만드는 중 오류가 났어요. 다시 시도해 주세요.'};}Promise.resolve(r).then(function(x){w.innerHTML=x.html;chat.scrollTop=chat.scrollHeight;}).catch(function(){w.innerHTML='답을 만드는 중 오류가 났어요. 다시 시도해 주세요.';}).then(function(){MENTION_ONLY=null;});},30);
     }
-    add('bot','안녕하세요! 내 <b>강의자료</b>를 바탕으로 답해 드려요.<br><span class="sub">예) "스택이 뭐야?" · "백엔드 요약해줘" · "리눅스 문제 내줘" · "알고리즘 키워드"</span><br><span class="sub">답변은 ① 강의자료 → ② 이전 Claude 대화 → ③ 외부 자료(따로 표시) 순서로 찾고, 추측은 하지 않아요. 아무것도 없으면 Claude를 쓰라고 안내해 드려요. 오답 노트는 "오답노트"라고 해 보세요.</span>'+(function(){var l=ls('강의지식_클로드갱신',0),d=l?Math.floor((Date.now()-l)/86400000):null;return '<br><span class="sub">'+(l?'Claude 대화는 '+(d===0?'오늘':d+'일 전')+' 학습했어요. ':'아직 Claude 대화를 학습하지 않았어요. ')+'</span> <button class="btn sm ghost" type="button" data-clsync="1">지금 학습하기</button>';})());
+    add('bot','안녕하세요! 내 <b>강의자료</b>를 바탕으로 답해 드려요.<br><span class="sub">예) "스택이 뭐야?" · "백엔드 요약해줘" · "알고리즘 키워드" · 위에서 📎 자료를 첨부하면 그 자료로만 답해요</span><br><span class="sub">문제 풀이 · 연습문제 · PPT · 시각화 · 캔버스는 위의 탭에서 골라 쓸 수 있어요.</span><br><span class="sub">답변은 ① 강의자료 → ② 이전 Claude 대화 → ③ 외부 자료(따로 표시) 순서로 찾고, 추측은 하지 않아요. 아무것도 없으면 Claude를 쓰라고 안내해 드려요. 오답 노트는 "오답노트"라고 해 보세요.</span>'+(function(){var l=ls('강의지식_클로드갱신',0),d=l?Math.floor((Date.now()-l)/86400000):null;return '<br><span class="sub">'+(l?'Claude 대화는 '+(d===0?'오늘':d+'일 전')+' 학습했어요. ':'아직 Claude 대화를 학습하지 않았어요. ')+'</span> <button class="btn sm ghost" type="button" data-clsync="1">지금 학습하기</button>';})());
     $('chatForm').addEventListener('submit',function(e){e.preventDefault();var v=$('chatIn').value;$('chatIn').value='';ask(v);});
     [].forEach.call(document.querySelectorAll('[data-sug]'),function(b){b.onclick=function(){ask(b.getAttribute('data-sug'));};});
     chat.addEventListener('click',function(e){

@@ -161,10 +161,8 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
     <button class="nav" data-s="tasks">✅ 과제 · 출석 <span class="n" id="nTask" hidden></span></button>
     <button class="nav" data-s="time">🗓️ 시간표</button>
     <button class="nav" data-s="gpa">🎯 학점 계산기</button>
-    <button class="nav" data-s="mat">📚 강의자료</button>
     <button class="nav" data-s="drive">📁 드라이브</button>
-    <button class="nav" data-s="study">✨ 공부 도우미</button>
-    <button class="nav" data-s="ai">🧠 AI 작업실</button>
+    <button class="nav" data-s="study">🤖 AI 도우미</button>
     <div class="sp"></div>
     <div class="meta" id="upd"></div>
     <button class="nav" id="syncBtn" type="button">🔄 로그인하고 업데이트</button>
@@ -201,9 +199,9 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
     </section>
 
     <section class="sec" id="s-time">
-      <div class="top"><div><h1>시간표</h1><p id="tRange"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="wPrev" type="button">← 이전 주</button><button class="btn ghost" id="wNow" type="button">이번 주</button><button class="btn ghost" id="wNext" type="button">다음 주 →</button><a class="btn" href="시간표.html">일정 추가 · 편집</a></div></div>
+      <div class="top"><div><h1>시간표</h1><p id="tRange"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="wPrev" type="button">← 이전 주</button><button class="btn ghost" id="wNow" type="button">이번 주</button><button class="btn ghost" id="wNext" type="button">다음 주 →</button><button class="btn" id="ttAdd" type="button">+ 일정 추가</button></div></div>
       <div id="grid"></div>
-      <p class="sub" style="margin-top:10px">파랑은 수업, 초록은 개인 일정, 빨강은 공지에서 찾은 일정이에요. 시간이 없는 일정은 맨 위 줄에 나와요.</p>
+      <p class="sub" style="margin-top:10px">파랑은 수업, 초록은 개인 일정, 빨강은 공지에서 찾은 일정이에요. 일정을 누르면 고치거나 지울 수 있고, 시간이 없는 일정은 맨 위 줄에 나와요.</p>
     </section>
 
     <section class="sec" id="s-gpa">
@@ -222,33 +220,9 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
       <p class="sub" style="font-size:.76rem;margin-top:12px">평점 = Σ(학점 × 점수) ÷ Σ(학점). A+ 4.5 · A0 4.0 · B+ 3.5 · B0 3.0 · C+ 2.5 · C0 2.0 · D+ 1.5 · D0 1.0 · F 0. 근거: <a href="https://www.shinhan.ac.kr/kr/242/subview.do" target="_blank" rel="noopener noreferrer">졸업심사기준</a> · <a href="https://www.shinhan.ac.kr/ce/7461/subview.do" target="_blank" rel="noopener noreferrer">2023학번 졸업조건</a></p>
     </section>
 
-    <section class="sec" id="s-mat">
-      <div class="top"><div><h1>강의자료</h1><p id="matNote">과목을 고르면 주차 순서로 보여 줘요</p></div></div>
-      <div class="card"><div class="pills" id="cPills"></div><div id="matBody"></div></div>
-    </section>
-
-    <section class="sec" id="s-study">
-      <div class="top"><div><h1>공부 도우미</h1><p>내 강의자료를 바탕으로 대화하듯 물어보세요 (Claude 없이 이 기기에서 동작)</p></div></div>
-      <div class="card">
-        <div class="bar"><select id="aiC"></select><span class="sub" id="aiCnt" style="font-size:.78rem"></span></div>
-        <div id="chat"></div>
-        <div class="bar" style="margin-top:10px"><button class="pill" type="button" data-sug="이 과목 요약해줘">요약해줘</button><button class="pill" type="button" data-sug="문제 내줘">문제 내줘</button><button class="pill" type="button" data-sug="핵심 키워드 알려줘">핵심 키워드</button><button class="pill" type="button" id="clSync" title="claude.ai의 내 대화를 자동으로 학습해요">🔄 Claude 대화 학습</button></div>
-        <form class="bar" id="chatForm" style="flex-wrap:nowrap"><input id="chatIn" type="text" autocomplete="off" style="flex:1;min-width:0" placeholder="질문을 입력하세요 (예: 세션이 뭐야?)"><button class="btn" type="submit">보내기</button></form>
-        <label class="sub" style="font-size:.72rem;display:inline-flex;gap:5px;align-items:center"><input type="checkbox" id="aiClaude"> Claude 토큰 사용</label> <label class="sub" style="font-size:.72rem;display:inline-flex;gap:5px;align-items:center;margin-left:10px"><input type="checkbox" id="aiWiki" checked> 자료에 없으면 위키백과 검색 (무료)</label> <label class="sub" style="font-size:.72rem;display:inline-flex;gap:5px;align-items:center;margin-left:10px"><input type="checkbox" id="aiSem"> 의미 검색 (내 PC에서 실행 · 처음 약 120MB)</label> <span class="sub" id="aiSemSt" style="font-size:.72rem"></span>
-        <div class="sub" style="font-size:.72rem;margin-top:6px;line-height:1.5">📌 <b>답변 기준</b> ① 강의자료 → ② 이전 Claude 대화(Claude가 분석한 강의 내용) → ③ 강의자료 밖 외부 자료(별도 표시). 자료에 없는 내용은 추측하지 않고, 다른 근거를 쓰면 그렇다고 표시해요.</div>
-        <details id="clImp" style="margin-top:10px"><summary class="sub" style="font-size:.78rem;cursor:pointer">Claude 대화 학습시키기 (클로드로 받은 설명이나 자료를 여기에 학습)</summary>
-          <div style="margin-top:8px;display:grid;gap:8px">
-            <div class="sub" style="font-size:.76rem">① Claude에서 받은 답을 붙여넣거나 ② claude.ai의 "데이터 내보내기"로 받은 <b>conversations.json</b>(또는 .txt/.md)을 선택해 주세요. 이 기기에만 저장돼요.</div>
-            <input id="clTitle" type="text" placeholder="제목 또는 질문 (선택)">
-            <textarea id="clText" rows="4" placeholder="여기에 Claude의 답변이나 강의 내용을 붙여넣기" style="border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:9px;padding:8px;font-family:inherit;font-size:.86rem;resize:vertical"></textarea>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn sm" type="button" id="clSave">학습시키기</button><input id="clFile" type="file" accept=".json,.txt,.md" style="font-size:.78rem"><button class="btn sm red" type="button" id="clClear">Claude 대화 학습 지우기</button><span class="sub" id="clMsg" style="font-size:.78rem"></span></div>
-          </div></details>
-      </div>
-      <div class="card" style="margin-top:14px"><h2>다가오는 시험 · 평가 <small>공지에서 찾은 일정</small></h2><div id="exams"></div></div>
-    </section>
-        <!-- ===== 드라이브 ===== -->
+                <!-- ===== 드라이브 (사이버캠퍼스 강의자료 + 내가 올린 자료) ===== -->
     <section class="sec" id="s-drive">
-      <div class="top"><div><h1>드라이브</h1><p id="drNote">사이버캠퍼스에서 읽은 자료와 내가 따로 올린 자료를 한곳에서 보고, 공부 도우미가 읽고 학습해요</p></div></div>
+      <div class="top"><div><h1>드라이브</h1><p id="drNote">사이버캠퍼스 강의자료와 내가 따로 올린 자료를 한곳에서 보고, AI 도우미가 읽고 학습해요</p></div><a class="btn ghost" id="drRoom" target="_blank" rel="noopener noreferrer" hidden>학교 강의실 열기 ↗</a></div>
       <div class="card" style="margin-bottom:14px">
         <div class="aibar" style="margin-bottom:8px"><label class="sub">올릴 과목 <select id="drCourse"></select></label><span class="mini">PDF · PPTX · DOCX · HWPX · TXT · MD · 코드 파일 · 이미지 (HWP는 PDF나 HWPX로 저장해서 올려 주세요)</span></div>
         <div class="drop" id="drDrop">📥 여기에 파일을 끌어다 놓거나 눌러서 고르세요 (여러 개 가능)</div>
@@ -257,43 +231,75 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
       </div>
       <div class="dr">
         <div class="side" id="drSide"></div>
-        <div class="card"><div class="bar"><input type="text" id="drQ" placeholder="파일 이름이나 내용으로 검색" style="flex:1;min-width:160px"><select id="drSort"><option value="course">과목순</option><option value="new">최근 올린 순</option><option value="name">이름순</option></select></div><div id="drList"></div></div>
+        <div class="card"><div class="bar"><input type="text" id="drQ" placeholder="파일 이름이나 내용으로 검색" style="flex:1;min-width:160px"><select id="drSort"><option value="course">주차 · 과목순</option><option value="new">최근 올린 순</option><option value="name">이름순</option></select></div>
+          <div class="seg" id="drSrc" style="margin-bottom:10px"><button type="button" data-s="all" aria-pressed="true">전체</button><button type="button" data-s="cy" aria-pressed="false">사이버캠퍼스</button><button type="button" data-s="up" aria-pressed="false">올린 자료</button><button type="button" data-s="post" aria-pressed="false">게시판 글</button></div>
+          <div id="drList"></div></div>
       </div>
       <div class="pv" id="drPv" hidden><div class="box card"><h2 id="drPvT"></h2><div class="mini" id="drPvM" style="margin-bottom:8px"></div><pre id="drPvB"></pre><div class="aibar" style="margin-top:10px"><button class="btn sm" id="drPvOpen" type="button">원본 열기</button><button class="btn sm ghost" id="drPvAsk" type="button">이 자료로 AI에게 묻기</button><button class="btn sm ghost" id="drPvX" type="button">닫기</button></div></div></div>
     </section>
 
-    <!-- ===== AI 작업실 ===== -->
-    <section class="sec" id="s-ai">
-      <div class="top"><div><h1>AI 작업실</h1><p>내 PC에서 돌아가는 AI로 문제 풀이 · PPT · 시각화 · 캔버스를 만들어요 (Claude 사용량 0)</p></div></div>
-      <div class="card" style="margin-bottom:14px">
-        <div class="aibar"><span class="dot" id="aiDot"></span><b id="aiStat">확인 중…</b>
-          <label class="sub">모델 <select id="aiModel"></select></label>
-          <label class="sub">그림 보는 모델 <select id="aiVision"></select></label>
-          <button class="btn sm ghost" id="aiRefresh" type="button">다시 확인</button>
-          <button class="btn sm ghost" id="aiHelpBtn" type="button">설치 안내</button></div>
-        <div id="aiHelp" hidden style="margin-top:10px;font-size:.84rem;line-height:1.7">
-          <b>내 PC AI(Ollama) 준비하기 — 한 번만</b><br>
-          ① <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">ollama.com/download</a>에서 Windows용을 설치해요. (설치하면 자동으로 켜져요)<br>
-          ② 명령 프롬프트에서 모델을 받아요. 보통 PC(그래픽카드 없음)에는 작은 모델이 알맞아요.<br>
-          <code>ollama pull qwen2.5:7b</code> (한국어 · 글쓰기, 느리지만 똑똑) 또는 <code>ollama pull qwen2.5:3b</code> (빠름)<br>
-          <code>ollama pull gemma3:4b</code> (그림 · 사진 문제를 볼 때 쓰는 모델)<br>
-          ③ 확장 프로그램이 설치돼 있으면 별도 설정 없이 연결돼요. 확장 없이 연결하려면 Ollama를 <code>OLLAMA_ORIGINS=*</code> 설정으로 켜야 해요.<br>
-          <span class="mini">내 PC 안에서만 계산하고 인터넷으로 내용이 나가지 않아요. 크기가 큰 모델일수록 정확하지만 오래 걸려요. 작은 모델은 틀릴 수 있으니 결과를 꼭 확인해 주세요.</span>
+    <!-- ===== AI 도우미 (질문 · 문제 풀이 · 연습문제 · PPT · 시각화 · 캔버스) ===== -->
+    <section class="sec" id="s-study">
+      <div class="top"><div><h1>AI 도우미</h1><p>강의자료를 근거로 질문하고, 문제를 풀고, 연습문제 · PPT · 그림을 만들어요</p></div></div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="aibar">
+          <label class="sub">과목 <select id="aiC"></select></label>
+          <button class="btn sm ghost" id="attBtn" type="button">📎 자료 첨부</button>
+          <label class="sub" style="display:inline-flex;gap:5px;align-items:center"><input type="checkbox" id="ragOn" checked> 강의자료 근거 사용</label>
+          <span class="mini" id="aiCnt"></span>
+          <span style="margin-left:auto;display:inline-flex;gap:8px;align-items:center"><span class="dot" id="aiDot"></span><span class="sub" id="aiStat">확인 중…</span><button class="btn sm ghost" id="aiSetBtn" type="button">⚙ 설정</button></span>
+        </div>
+        <div class="chips" id="attChips" style="margin-top:8px"></div>
+        <div id="aiSet" hidden style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px;display:grid;gap:12px">
+          <div><b style="font-size:.86rem">내 PC AI (Ollama)</b>
+            <div class="aibar" style="margin-top:6px"><label class="sub">모델 <select id="aiModel"></select></label><label class="sub">그림 보는 모델 <select id="aiVision"></select></label><button class="btn sm ghost" id="aiRefresh" type="button">다시 확인</button><button class="btn sm ghost" id="aiHelpBtn" type="button">설치 안내</button></div>
+            <div id="aiHelp" hidden style="margin-top:10px;font-size:.84rem;line-height:1.7">
+              ① <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">ollama.com/download</a>에서 Windows용을 설치해요. (명령으로는 <code>winget install Ollama.Ollama</code>)<br>
+              ② 명령 프롬프트에서 모델을 받아요. 그래픽카드가 없는 보통 PC에는 작은 모델이 알맞아요.<br>
+              <code>ollama pull qwen2.5:3b</code> (빠름, 약 2GB) 또는 <code>ollama pull qwen2.5:7b</code> (더 똑똑하지만 느림)<br>
+              <code>ollama pull gemma3:4b</code> (사진 · 그림 문제를 볼 때)<br>
+              ③ 확장 프로그램이 설치돼 있으면 별도 설정 없이 연결돼요. 확장 없이 쓰려면 Ollama를 <code>OLLAMA_ORIGINS=*</code> 설정으로 켜야 해요.<br>
+              <span class="mini">내 PC 안에서만 계산하고 인터넷으로 내용이 나가지 않아요. 작은 모델은 틀릴 수 있으니 결과를 꼭 확인해 주세요.</span>
+            </div></div>
+          <div><b style="font-size:.86rem">답을 찾는 방법</b>
+            <div class="aibar" style="margin-top:6px">
+              <label class="sub" style="display:inline-flex;gap:5px;align-items:center"><input type="checkbox" id="aiWiki" checked> 자료에 없으면 위키백과 검색 (무료)</label>
+              <label class="sub" style="display:inline-flex;gap:5px;align-items:center"><input type="checkbox" id="aiSem"> 의미 검색 (내 PC에서 실행 · 처음 약 120MB)</label><span class="mini" id="aiSemSt"></span>
+              <label class="sub" style="display:inline-flex;gap:5px;align-items:center"><input type="checkbox" id="aiClaude"> Claude 버튼 보이기</label>
+            </div>
+            <div class="mini" style="margin-top:6px;line-height:1.5">📌 <b>답변 기준</b> ① 강의자료 → ② 이전 Claude 대화(Claude가 분석한 강의 내용) → ③ 강의자료 밖 외부 자료(별도 표시). 자료에 없는 내용은 추측하지 않고, 다른 근거를 쓰면 그렇다고 표시해요.</div></div>
+          <details id="clImp"><summary class="sub" style="font-size:.84rem;cursor:pointer"><b>Claude 대화 학습시키기</b> (클로드로 받은 설명이나 자료를 여기에 학습)</summary>
+            <div style="margin-top:8px;display:grid;gap:8px">
+              <div class="sub" style="font-size:.76rem">① Claude에서 받은 답을 붙여넣거나 ② claude.ai의 "데이터 내보내기"로 받은 <b>conversations.json</b>(또는 .txt/.md)을 선택해 주세요. 이 기기에만 저장돼요.</div>
+              <input id="clTitle" type="text" placeholder="제목 또는 질문 (선택)">
+              <textarea id="clText" rows="4" placeholder="여기에 Claude의 답변이나 강의 내용을 붙여넣기" style="border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:9px;padding:8px;font-family:inherit;font-size:.86rem;resize:vertical"></textarea>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn sm" type="button" id="clSave">학습시키기</button><input id="clFile" type="file" accept=".json,.txt,.md" style="font-size:.78rem"><button class="btn sm red" type="button" id="clClear">Claude 대화 학습 지우기</button><span class="sub" id="clMsg" style="font-size:.78rem"></span></div>
+            </div></details>
         </div>
       </div>
-      <div class="bar"><div class="seg" id="aiTabs"><button type="button" data-t="solve" aria-pressed="true">🧮 문제 풀이</button><button type="button" data-t="ppt" aria-pressed="false">📊 PPT 제작</button><button type="button" data-t="viz" aria-pressed="false">📈 시각화</button><button type="button" data-t="canvas" aria-pressed="false">🎨 캔버스</button></div></div>
 
-      <div id="p-solve" class="card">
+      <div class="bar"><div class="seg" id="aiTabs"><button type="button" data-t="chat" aria-pressed="true">💬 질문</button><button type="button" data-t="solve" aria-pressed="false">🧮 문제 풀이</button><button type="button" data-t="quiz" aria-pressed="false">📝 연습문제</button><button type="button" data-t="ppt" aria-pressed="false">📊 PPT</button><button type="button" data-t="viz" aria-pressed="false">📈 시각화</button><button type="button" data-t="canvas" aria-pressed="false">🎨 캔버스</button></div></div>
+
+      <div id="p-chat" class="card">
+        <div id="chat"></div>
+        <div class="bar" style="margin-top:10px"><button class="pill" type="button" data-sug="이 과목 요약해줘">요약해줘</button><button class="pill" type="button" data-sug="핵심 키워드 알려줘">핵심 키워드</button><button class="pill" type="button" data-sug="오답노트">오답 노트</button><button class="pill" type="button" id="clSync" title="claude.ai의 내 대화를 자동으로 학습해요">🔄 Claude 대화 학습</button></div>
+        <form class="bar" id="chatForm" style="flex-wrap:nowrap"><input id="chatIn" type="text" autocomplete="off" style="flex:1;min-width:0" placeholder="질문을 입력하세요 (예: 세션이 뭐야?  /  @파일이름 으로 자료를 지정할 수 있어요)"><button class="btn" type="submit">보내기</button></form>
+      </div>
+
+      <div id="p-solve" class="card" hidden>
         <h2>문제 풀이 <small>강의자료를 근거로 단계별로 풀어요</small></h2>
         <textarea class="ta" id="svQ" rows="5" placeholder="문제를 붙여넣어 주세요. 사진 문제는 아래에서 이미지를 붙이거나 올려 주세요."></textarea>
         <div class="aibar" style="margin-top:8px"><input type="file" id="svImg" accept="image/*" multiple hidden><button class="btn sm ghost" id="svImgBtn" type="button">🖼️ 이미지 첨부</button><span class="mini" id="svImgN"></span>
-          <label class="sub">풀이 방식 <select id="svMode"><option value="step">단계별로 자세히</option><option value="short">간단히</option><option value="check">답 + 검산</option></select></label>
-          <label class="sub"><input type="checkbox" id="svRag" checked> 강의자료 근거 사용</label>
-          <select id="svCourse"></select></div>
-        <div class="chips" id="svFiles" style="margin-top:8px"></div>
-        <div class="aibar" style="margin-top:8px"><button class="btn" id="svRun" type="button">풀이하기</button><button class="btn ghost" id="svStop" type="button" hidden>중지</button><button class="btn sm ghost" id="svAtt" type="button">📎 올린 자료 첨부</button><span class="mini" id="svMeta"></span></div>
+          <label class="sub">풀이 방식 <select id="svMode"><option value="step">단계별로 자세히</option><option value="short">간단히</option><option value="check">답 + 검산</option></select></label></div>
+        <div class="aibar" style="margin-top:8px"><button class="btn" id="svRun" type="button">풀이하기</button><button class="btn ghost" id="svStop" type="button" hidden>중지</button><span class="mini" id="svMeta"></span></div>
         <div class="out" id="svOut" style="margin-top:10px">여기에 풀이가 나와요.</div>
         <div class="aibar" style="margin-top:8px"><button class="btn sm ghost" id="svCopy" type="button">복사</button><button class="btn sm ghost" id="svClaude" type="button">Claude에서 이어서 질문 ↗</button></div>
+      </div>
+
+      <div id="p-quiz" class="card" hidden>
+        <h2>연습문제 <small>자료의 문장으로 빈칸 · 객관식 · O/X를 만들고 채점해요</small></h2>
+        <div class="aibar"><label class="sub">문제 수 <select id="qzN"><option>5</option><option selected>6</option><option>8</option><option>10</option></select></label><button class="btn" id="qzRun" type="button">문제 만들기</button><button class="btn sm ghost" id="qzWrong" type="button">오답 노트 보기</button><span class="mini">위의 과목 · 첨부 자료가 범위예요</span></div>
+        <div id="qzOut" style="margin-top:12px"><div class="empty">"문제 만들기"를 누르면 연습문제가 나와요.</div></div>
       </div>
 
       <div id="p-ppt" class="card" hidden>
@@ -301,10 +307,8 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
         <textarea class="ta" id="ppQ" rows="3" placeholder="어떤 발표인가요? 예) 운영체제 교착상태 개념과 해결 방법을 5분 발표용으로"></textarea>
         <div class="aibar" style="margin-top:8px"><label class="sub">슬라이드 수 <input type="number" id="ppN" value="8" min="3" max="15" style="width:64px"></label>
           <label class="sub">스타일 <select id="ppTone"><option value="short">발표용 간결</option><option value="detail">자세하게</option></select></label>
-          <label class="sub">색상 <select id="ppTheme"><option value="0f766e">초록</option><option value="175cd3">파랑</option><option value="7a3db8">보라</option><option value="d92d20">빨강</option><option value="1d2433">검정</option></select></label>
-          <label class="sub"><input type="checkbox" id="ppRag" checked> 강의자료 근거 사용</label><select id="ppCourse"></select></div>
-        <div class="chips" id="ppFiles" style="margin-top:8px"></div>
-        <div class="aibar" style="margin-top:8px"><button class="btn" id="ppRun" type="button">구성 만들기</button><button class="btn ghost" id="ppStop" type="button" hidden>중지</button><button class="btn sm ghost" id="ppAtt" type="button">📎 올린 자료 첨부</button><span class="mini" id="ppMeta"></span></div>
+          <label class="sub">색상 <select id="ppTheme"><option value="0f766e">초록</option><option value="175cd3">파랑</option><option value="7a3db8">보라</option><option value="d92d20">빨강</option><option value="1d2433">검정</option></select></label></div>
+        <div class="aibar" style="margin-top:8px"><button class="btn" id="ppRun" type="button">구성 만들기</button><button class="btn ghost" id="ppStop" type="button" hidden>중지</button><span class="mini" id="ppMeta"></span></div>
         <div id="ppPrev" style="margin-top:12px"></div>
         <div class="aibar" style="margin-top:8px" id="ppAct" hidden><button class="btn" id="ppDl" type="button">⬇ .pptx 내려받기</button><button class="btn sm ghost" id="ppAdd" type="button">+ 슬라이드</button></div>
       </div>
@@ -313,7 +317,6 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
         <h2>시각화 <small>개념도 · 흐름도 · 차트를 그려요</small></h2>
         <textarea class="ta" id="vzQ" rows="3" placeholder="무엇을 그릴까요? 예) 프로세스 상태 전이(생성→준비→실행→대기→종료) / 차트는 값을 함께 적어 주세요: 1월 10, 2월 14, 3월 9"></textarea>
         <div class="aibar" style="margin-top:8px"><label class="sub">종류 <select id="vzKind"><option value="flowchart">흐름도</option><option value="sequence">순서도(주고받기)</option><option value="state">상태 전이도</option><option value="class">클래스 다이어그램</option><option value="er">ER 다이어그램</option><option value="mindmap">마인드맵</option><option value="chart">차트(값 직접 입력)</option></select></label>
-          <label class="sub"><input type="checkbox" id="vzRag" checked> 강의자료 근거 사용</label><select id="vzCourse"></select>
           <button class="btn" id="vzRun" type="button">그리기</button><button class="btn ghost" id="vzStop" type="button" hidden>중지</button><span class="mini" id="vzMeta"></span></div>
         <div class="stage" id="vzStage" style="margin-top:10px">여기에 그림이 나와요.</div>
         <details style="margin-top:8px"><summary class="sub" style="cursor:pointer">코드 보기 · 직접 고치기</summary><textarea class="ta" id="vzCode" rows="7" style="font-family:Consolas,monospace"></textarea><button class="btn sm ghost" id="vzRedraw" type="button" style="margin-top:6px">다시 그리기</button></details>
@@ -330,10 +333,26 @@ select:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accb
         <details style="margin-top:8px"><summary class="sub" style="cursor:pointer">SVG 코드 보기 · 직접 고치기</summary><textarea class="ta" id="cvCode" rows="7" style="font-family:Consolas,monospace"></textarea><button class="btn sm ghost" id="cvRedraw" type="button" style="margin-top:6px">다시 그리기</button></details>
         <div class="aibar" style="margin-top:8px"><input type="text" id="cvFix" placeholder="고칠 점을 말해 주세요 (예: 제목을 더 크게, 색을 파랑으로)" style="flex:1;min-width:200px"><button class="btn sm" id="cvFixBtn" type="button">수정 요청</button><button class="btn sm ghost" id="cvSvg" type="button">SVG 저장</button><button class="btn sm ghost" id="cvPng" type="button">PNG 저장</button></div>
       </div>
-      <p class="mini" style="margin-top:12px">이 화면의 AI는 내 PC의 모델이 만든 결과예요. 자료에 없는 내용은 "추론" 또는 "일반 지식"이라고 따로 표시하도록 했지만, 작은 모델은 틀릴 수 있어요. 중요한 내용은 강의자료로 꼭 확인해 주세요.</p>
+      <p class="mini" style="margin-top:12px">풀이 · PPT · 시각화 · 캔버스는 내 PC의 AI 모델이 만든 결과예요. 자료에 없는 내용은 "추론" 또는 "일반 지식"이라고 따로 표시하도록 했지만, 작은 모델은 틀릴 수 있어요. 중요한 내용은 강의자료로 꼭 확인해 주세요.</p>
     </section>
 
-    <div id="filePick" class="pv" hidden><div class="box card"><h2>올린 자료 첨부</h2><div class="mini" style="margin-bottom:6px">AI가 읽을 자료를 골라 주세요</div><div id="filePickList"></div><div class="aibar" style="margin-top:10px"><button class="btn sm" id="filePickOk" type="button">첨부하기</button><button class="btn sm ghost" id="filePickX" type="button">취소</button></div></div></div>
+    <!-- 자료 첨부 고르기 -->
+    <div id="filePick" class="pv" hidden><div class="box card"><h2>자료 첨부</h2><div class="mini" style="margin-bottom:6px">AI가 이번에 읽을 자료를 골라 주세요 (질문 · 풀이 · PPT · 시각화 모두에 쓰여요)</div><div id="filePickList"></div><div class="aibar" style="margin-top:10px"><button class="btn sm" id="filePickOk" type="button">첨부하기</button><button class="btn sm ghost" id="filePickX" type="button">취소</button></div></div></div>
+
+    <!-- 시간표 일정 편집 -->
+    <div id="tkPv" class="pv" hidden><div class="box card" style="max-width:460px"><h2 id="tkTitle">일정 추가</h2>
+      <div style="display:grid;gap:8px">
+        <input type="text" id="tkT" maxlength="60" placeholder="제목 (예: 스터디, 병원, 알바)">
+        <div class="aibar"><label class="sub">종류 <select id="tkType"><option value="class">수업</option><option value="etc" selected>기타</option><option value="task">과제 · 마감</option></select></label>
+          <label class="sub"><input type="radio" name="tkMode" value="rep" checked> 매주 반복</label><label class="sub"><input type="radio" name="tkMode" value="once"> 한 번만</label></div>
+        <div class="aibar" id="tkDays"><label class="sub"><input type="checkbox" value="0">월</label><label class="sub"><input type="checkbox" value="1">화</label><label class="sub"><input type="checkbox" value="2">수</label><label class="sub"><input type="checkbox" value="3">목</label><label class="sub"><input type="checkbox" value="4">금</label><label class="sub"><input type="checkbox" value="5">토</label><label class="sub"><input type="checkbox" value="6">일</label></div>
+        <div class="aibar" id="tkDateBox" hidden><label class="sub">날짜 <input type="date" id="tkDate"></label></div>
+        <div class="aibar"><label class="sub">시작 <input type="time" id="tkS"></label><label class="sub">끝 <input type="time" id="tkE"></label></div>
+        <input type="text" id="tkP" maxlength="40" placeholder="장소 (선택)">
+        <input type="text" id="tkM" maxlength="80" placeholder="메모 (선택)">
+        <div class="mini" id="tkErr" style="color:var(--red)"></div>
+        <div class="aibar"><button class="btn" id="tkSave" type="button">저장</button><button class="btn red" id="tkDel" type="button" hidden>삭제</button><button class="btn ghost" id="tkX" type="button">취소</button></div>
+      </div></div></div>
 
     <p class="foot" id="health" style="margin-top:14px"></p>
     <p class="foot" id="foot"></p>
@@ -561,7 +580,7 @@ function __main(){
     if(s==='time')drawGrid();
     if(s==='gpa'&&window.__gpaDraw)window.__gpaDraw();
     if(s==='drive'&&window.__driveDraw)window.__driveDraw();
-    if(s==='ai'&&window.__aiDraw)window.__aiDraw();
+    if(s==='study'&&window.__aiDraw)window.__aiDraw();
   }
   [].forEach.call(document.querySelectorAll('.nav[data-s]'),function(b){b.onclick=function(){show(b.getAttribute('data-s'));};});
 
@@ -654,7 +673,7 @@ function __main(){
     function row(e){var d=new Date(e.d+'T00:00'),n=Math.round((d-T0)/86400000);return '<div class="row"><div class="tm">'+esc(e.d.slice(5).replace('-','/'))+'('+NM[d.getDay()]+')'+(e.t?' '+esc(e.t):'')+'</div><div class="t"><b>'+esc(e.title)+'</b><span>'+esc(e.p||'')+'</span></div><span class="tag '+(n<=4?'r':(n<=7?'a':''))+'">D-'+n+'</span><a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(e.h)+'">원문</a></div>';}
     $('sched').innerHTML=up.length?up.map(row).join(''):'<div class="empty">앞으로 남은 공지 일정이 없어요</div>';
     var ex=up.filter(function(e){return e.type==='exam';});
-    $('exams').innerHTML=ex.length?ex.map(row).join(''):'<div class="empty">공지에서 찾은 시험·평가 일정이 아직 없어요. 시간표에 직접 넣어 두면 챙기기 쉬워요.</div>';
+    if($('exams'))$('exams').innerHTML=ex.length?ex.map(row).join(''):'<div class="empty">공지에서 찾은 시험·평가 일정이 아직 없어요. 시간표에 직접 넣어 두면 챙기기 쉬워요.</div>';
     var ah='',any=false;
     if(has)D.courses.forEach(function(c){var w=(c.attend||[]).filter(function(x){return (x.vids&&x.vids.length)||x.mark;});if(!w.length)return;any=true;
       var bad=[];(c.attend||[]).forEach(function(x){(x.vids||[]).forEach(function(v){if(v.m&&v.m!=='O')bad.push(x.w+'주차 · '+v.n+' · '+v.m);});});
@@ -676,10 +695,10 @@ function __main(){
     for(var c=0;c<ndays;c++){(function(c){var d=new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+c),isT=iso(d)===iso(n);
       hd+='<div class="'+(isT?'td':'')+'">'+DN[c]+'<small>'+(d.getMonth()+1)+'/'+d.getDate()+'</small></div>';
       var es=evs[c],timed=es.filter(function(e){return e.start;}),untimed=es.filter(function(e){return !e.start;});
-      un+='<div>'+untimed.map(function(e){return e.ro?'<a class="chipu" target="_blank" rel="noopener noreferrer" href="'+esc(e.h)+'">'+esc(e.title)+'</a>':'<span class="chipu">'+esc(e.title)+'</span>';}).join('')+'</div>';
+      un+='<div>'+untimed.map(function(e){return e.ro?'<a class="chipu" target="_blank" rel="noopener noreferrer" href="'+esc(e.h)+'">'+esc(e.title)+'</a>':'<span class="chipu" data-eid="'+esc(e.id)+'" style="cursor:pointer">'+esc(e.title)+'</span>';}).join('')+'</div>';
       var lanes=[];timed.forEach(function(e){var s=at(d,e.start),en=endOf(e,d),l=0;while(lanes[l]&&lanes[l]>s)l++;lanes[l]=en;e._l=l;});var L=Math.max(1,lanes.length);
       var blocks=timed.map(function(e){var s=at(d,e.start),en=endOf(e,d),top=((s.getHours()*60+s.getMinutes())-hh0*60)*HH/60,h=Math.max(24,((en-s)/60000)*HH/60-2),w=100/L,live=isT&&n>=s&&n<en;
-        var tag=e.ro?'a':'div',attr=e.ro?' href="'+esc(e.h)+'" target="_blank" rel="noopener noreferrer"':'';
+        var tag=e.ro?'a':'div',attr=e.ro?' href="'+esc(e.h)+'" target="_blank" rel="noopener noreferrer"':' data-eid="'+esc(e.id)+'" title="눌러서 고치기"';
         return '<'+tag+' class="blk '+(e.type==='work'?'work':(e.type==='etc'?'etc':(e.type==='notice'?'notice':'')))+(live?' on':'')+'" style="top:'+top+'px;height:'+h+'px;left:calc('+(e._l*w)+'% + 2px);width:calc('+w+'% - 4px)"'+attr+'><b>'+esc(e.title)+'</b>'+esc(e.start+(e.end?'~'+e.end:''))+(e.place&&h>44?'<br>'+esc(e.place):'')+'</'+tag+'>';}).join('');
       var nl='';if(isT){var m=(n.getHours()*60+n.getMinutes())-hh0*60;if(m>=0&&m<=(hh1-hh0)*60)nl='<div class="nowl" style="top:'+(m*HH/60)+'px"></div>';}
       cols+='<div class="tgc'+(isT?' td':'')+'" style="--hh:'+HH+'px;height:'+H+'px">'+blocks+nl+'</div>';})(c);}
@@ -693,27 +712,7 @@ function __main(){
   function weekOf(s){var m=String(s||'').match(/(\d+)\s*주/);return m?+m[1]:null;}
   function wkn(m){if(m.ord!=null)return m.ord;var w=weekOf(m.wk);if(w!=null)return w;if(m.wk&&/공통|개요|오리엔/.test(m.wk))return 0;w=weekOf(m.from);if(w!=null)return w;w=weekOf(m.f||m.n);if(w!=null)return w;if(/중간고사|기말|시험/.test((m.from||'')+' '+(m.f||m.n)))return 99;return 98;}
   function wl(w){return w===0?'공통':(w===98?'주차 확인 필요':(w===99?'시험':w+'주차'));}
-  function mats(){
-    if(!has){$('matBody').innerHTML='<div class="empty">데이터가 없어요. 왼쪽 아래 "로그인하고 업데이트"를 눌러 주세요</div>';return;}
-    [].forEach.call(document.querySelectorAll('.pill'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-c')===sel));});
-    var c=D.courses.filter(function(x){return x.folder===sel;})[0];
-    if(!c){$('matBody').innerHTML='<div class="empty">위에서 과목을 골라 주세요</div>';return;}
-    var have={};(c.mat||[]).forEach(function(m){if(m.f)have[norm(m.f)]=1;});
-    var lm=(window.LOCAL_MATS||[]).filter(function(x){return x.folder===c.folder&&!have[norm(x.f)];}).map(function(x){return {wk:'',n:x.n,f:x.f,h:'',k:'파일',loc:true,from:'내 PC',ord:x.ord,lab:x.lab};});
-    var items=(c.mat||[]).concat(lm).map(function(m){return {m:m,w:wkn(m)};}).sort(function(a,b){return a.w-b.w;});
-    $('matNote').textContent=c.name+' · 자료 '+items.length+'개';
-    var h='<div style="margin-bottom:6px"><a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="https://cyber.shinhan.ac.kr/course/view.php?id='+encodeURIComponent(c.id)+'">학교 강의실 열기</a></div>',last=null;
-    if(!items.length)h+='<div class="empty">이 강의에는 올라온 강의자료가 없어요</div>';
-    var today=iso(new Date());
-    items.forEach(function(x){var m=x.m;var lbl=m.lab||wl(x.w);if(lbl!==last){h+='<div class="grp">'+esc(lbl)+'</div>';last=lbl;}
-      var isF=!!m.f,u=isF&&m.loc?'첨부파일/'+encodeURIComponent(c.folder)+'/'+encodeURIComponent(m.f):m.h,rec=m.add&&(new Date(today)-new Date(m.add))/86400000<=7;
-      h+='<div class="file"><div class="t"><b>'+esc(m.n||m.f)+(rec?' <span class="tag a">새 자료</span>':'')+'</b><span>'+esc(m.k||'파일')+(isF?' · '+esc(m.f):'')+' · '+(m.loc?'내 폴더에 있음':'학교 사이트에서 열기')+'</span></div><a class="btn sm" target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">'+(m.loc?'열기':'학교 사이트')+'</a></div>';});
-    var ps=(D.posts||[]).filter(function(p){return p.c===c.name;});
-    if(ps.length){h+='<div class="grp">게시판 글 ('+ps.length+')</div>'+ps.map(function(p){return '<div class="file"><div class="t"><b>'+esc(p.t)+'</b><span>'+esc(p.b||'게시판')+' · '+esc(p.d||'')+(p.a?' · '+esc(p.a):'')+'</span></div><a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(p.h)+'">글 보기</a></div>';}).join('');}
-    $('matBody').innerHTML=h;
-  }
-  $('cPills').innerHTML=has?D.courses.map(function(c){return '<button type="button" class="pill" data-c="'+esc(c.folder)+'" aria-pressed="false">'+esc(c.folder)+'</button>';}).join(''):'';
-  $('cPills').addEventListener('click',function(e){var b=e.target.closest('.pill');if(b){sel=b.getAttribute('data-c');mats();}});
+  function mats(){}
   sel=has&&D.courses[0]?D.courses[0].folder:null;
 
 
@@ -765,6 +764,15 @@ function __main(){
     }
     window.__kbRefresh=function(){idxCache=null;cidxCache=null;DOCS=docs();rebuildCourses();setTimeout(semTopUp,0);};
     var MENTION_ONLY=null;
+    window.__quiz={
+      html:function(c,n){
+        var att=(typeof ATT!=='undefined'&&ATT.all.length&&window.__driveFiles)?window.__driveFiles().filter(function(f){return ATT.all.indexOf(f.id)>=0;}):[];
+        if(att.length){MENTION_ONLY={};att.forEach(function(f){MENTION_ONLY[f.n]=1;});}
+        try{return answerQuiz(c,n);}finally{MENTION_ONLY=null;}
+      },
+      click:function(e){return quizClick(e);},
+      wrong:function(){return showWrong();}
+    };
     window.__rag=function(q,course,max){
       var res=searchChunks(q,course||null,null,'lec'),out=[];
       for(var i=0;i<res.length&&out.length<(max||6);i++){if(res[i].s>=2&&res[i].cov>=0.25)out.push({title:res[i].ch.title,text:res[i].ch.text,src:res[i].ch.c+' · '+res[i].ch.n});}
@@ -779,7 +787,7 @@ function __main(){
       return hit;
     }
     function inScope(c){return function(x){return !c||x.c===c||x.c===CLC;};}
-    function onlyCourse(c){return function(x){return x.c!==CLC&&(!c||x.c===c);};}
+    function onlyCourse(c){return function(x){return x.c!==CLC&&(!c||x.c===c)&&(!MENTION_ONLY||!!MENTION_ONLY[x.n]);};}
     function srcLine(list){var m={};list.forEach(function(x){m[(x.c===CLC?'이전 Claude 대화':x.c)+' · '+x.n]=1;});return '<div class="sub" style="font-size:.74rem;margin-top:6px">출처: '+Object.keys(m).slice(0,4).map(esc).join(' / ')+'</div>';}
     function claudeBtn(q){return '<div style="margin-top:8px"><button class="btn sm ghost" type="button" data-claude="'+esc(q)+'">Claude에게 질문하기 ↗</button></div>';}
     function claudeHint(q){return $('aiClaude').checked?claudeBtn(q):'<div class="sub" style="font-size:.78rem;margin-top:6px">더 정확한 답이 필요하면 아래 <b>Claude 토큰 사용</b>을 체크해 Claude에게 물어보세요.</div>';}
@@ -1217,11 +1225,12 @@ function __main(){
       q=String(q||'').trim();if(!q)return;
       add('me',esc(q));
       var men=(window.__driveFiles?window.__driveFiles():[]).filter(function(f){return q.indexOf('@'+f.n)>=0;});
-      if(men.length){MENTION_ONLY={};men.forEach(function(f){MENTION_ONLY[f.n]=1;q=q.split('@'+f.n).join(' ');});q=q.trim()||'핵심 내용 알려줘';}
+      var att=(typeof ATT!=='undefined'&&ATT.all.length&&window.__driveFiles)?window.__driveFiles().filter(function(f){return ATT.all.indexOf(f.id)>=0;}):[];
+      if(men.length||att.length){MENTION_ONLY={};men.concat(att).forEach(function(f){MENTION_ONLY[f.n]=1;q=q.split('@'+f.n).join(' ');});q=q.trim()||'핵심 내용 알려줘';}
       var w=add('bot','<span class="sub">자료에서 찾는 중…</span>');
       setTimeout(function(){var r;try{r=reply(q);}catch(e){r={html:'답을 만드는 중 오류가 났어요. 다시 시도해 주세요.'};}Promise.resolve(r).then(function(x){w.innerHTML=x.html;chat.scrollTop=chat.scrollHeight;}).catch(function(){w.innerHTML='답을 만드는 중 오류가 났어요. 다시 시도해 주세요.';}).then(function(){MENTION_ONLY=null;});},30);
     }
-    add('bot','안녕하세요! 내 <b>강의자료</b>를 바탕으로 답해 드려요.<br><span class="sub">예) "스택이 뭐야?" · "백엔드 요약해줘" · "리눅스 문제 내줘" · "알고리즘 키워드"</span><br><span class="sub">답변은 ① 강의자료 → ② 이전 Claude 대화 → ③ 외부 자료(따로 표시) 순서로 찾고, 추측은 하지 않아요. 아무것도 없으면 Claude를 쓰라고 안내해 드려요. 오답 노트는 "오답노트"라고 해 보세요.</span>'+(function(){var l=ls('강의지식_클로드갱신',0),d=l?Math.floor((Date.now()-l)/86400000):null;return '<br><span class="sub">'+(l?'Claude 대화는 '+(d===0?'오늘':d+'일 전')+' 학습했어요. ':'아직 Claude 대화를 학습하지 않았어요. ')+'</span> <button class="btn sm ghost" type="button" data-clsync="1">지금 학습하기</button>';})());
+    add('bot','안녕하세요! 내 <b>강의자료</b>를 바탕으로 답해 드려요.<br><span class="sub">예) "스택이 뭐야?" · "백엔드 요약해줘" · "알고리즘 키워드" · 위에서 📎 자료를 첨부하면 그 자료로만 답해요</span><br><span class="sub">문제 풀이 · 연습문제 · PPT · 시각화 · 캔버스는 위의 탭에서 골라 쓸 수 있어요.</span><br><span class="sub">답변은 ① 강의자료 → ② 이전 Claude 대화 → ③ 외부 자료(따로 표시) 순서로 찾고, 추측은 하지 않아요. 아무것도 없으면 Claude를 쓰라고 안내해 드려요. 오답 노트는 "오답노트"라고 해 보세요.</span>'+(function(){var l=ls('강의지식_클로드갱신',0),d=l?Math.floor((Date.now()-l)/86400000):null;return '<br><span class="sub">'+(l?'Claude 대화는 '+(d===0?'오늘':d+'일 전')+' 학습했어요. ':'아직 Claude 대화를 학습하지 않았어요. ')+'</span> <button class="btn sm ghost" type="button" data-clsync="1">지금 학습하기</button>';})());
     $('chatForm').addEventListener('submit',function(e){e.preventDefault();var v=$('chatIn').value;$('chatIn').value='';ask(v);});
     [].forEach.call(document.querySelectorAll('[data-sug]'),function(b){b.onclick=function(){ask(b.getAttribute('data-sug'));};});
     chat.addEventListener('click',function(e){
@@ -1405,6 +1414,7 @@ function __main(){
   $('calP').onclick=function(){calOff--;calDraw();};$('calN').onclick=function(){calOff++;calDraw();};$('calToday').onclick=function(){calOff=0;calDraw();};
 
   /* ===== 내 PC AI (Ollama) 연결 · 공용 도구 ===== */
+  var ATT={all:[]};
   var AISET='ai_설정';
   var AI={host:'http://127.0.0.1:11434',model:'',vision:'',ready:false,models:[],pending:{},seq:0};
   (function(){var s=ls(AISET,{});if(s&&s.host)AI.host=s.host;if(s&&s.model)AI.model=s.model;if(s&&s.vision)AI.vision=s.vision;})();
@@ -1483,13 +1493,13 @@ function __main(){
       aiSave();
       $('aiDot').className='dot '+(AI.ready?'ok':'no');
       $('aiStat').textContent=AI.ready?'내 PC AI 연결됨 ('+names.length+'개 모델)':'연결됐지만 모델이 없어요 — 설치 안내를 따라 모델을 받아 주세요';
-      if(!AI.ready)$('aiHelp').hidden=false;
+      if(!AI.ready){$('aiSet').hidden=false;$('aiHelp').hidden=false;}
       return AI.ready;
     }).catch(function(e){
       AI.ready=false;$('aiDot').className='dot no';
       $('aiStat').textContent='내 PC AI에 연결하지 못했어요';
       $('aiModel').innerHTML='<option value="">(없음)</option>';$('aiVision').innerHTML='<option value="">(없음)</option>';
-      $('aiHelp').hidden=false;return false;
+      $('aiSet').hidden=false;$('aiHelp').hidden=false;return false;
     });
   }
 
@@ -1571,11 +1581,11 @@ function __main(){
   function needAi(metaId){
     if(AI.ready&&AI.model)return false;
     var el=$(metaId);if(el)el.textContent='내 PC AI가 연결되지 않았어요. 위의 "설치 안내"를 확인해 주세요.';
-    $('aiHelp').hidden=false;return true;
+    $('aiSet').hidden=false;$('aiHelp').hidden=false;return true;
   }
 
   /* ===== 드라이브: 사이버캠퍼스 자료 + 내가 올린 자료 ===== */
-  var UP_KEY='강의지식_업로드',DRV={course:'all',q:'',sort:'course',pvId:null};
+  var UP_KEY='강의지식_업로드',DRV={course:'all',q:'',sort:'course',src:'all',pvId:null};
   var OTHER='내 업로드(기타)';
   function upStore(){var m=ls(UP_KEY,{});return (m&&typeof m==='object')?m:{};}
   function driveFileById(id){var m=upStore()[id];return m||null;}
@@ -1660,41 +1670,53 @@ function __main(){
   }
 
   /* ---- 목록 ---- */
+  function wkNum(m){var w=String(m.wk||'').match(/(\d+)\s*주/);if(w)return +w[1];if(m.wk&&/공통|개요|오리엔/.test(m.wk))return 0;w=String(m.from||'').match(/(\d+)\s*주/);if(w)return +w[1];w=String(m.f||m.n||'').match(/(\d+)\s*주/);if(w)return +w[1];if(/중간고사|기말|시험/.test((m.from||'')+' '+(m.f||m.n)))return 99;return 98;}
+  function wkLabel(it){if(it.src==='pc')return it.week+'장';var w=it.week;return w===0?'공통':(w===98?'주차 확인 필요':(w===99?'시험':w+'주차'));}
   function driveItems(){
-    var out=[];
+    var out=[],today=iso(new Date());
     if(has)D.courses.forEach(function(c){(c.mat||[]).forEach(function(m,i){
       var nm=m.n||m.f||'자료',ext=(String(m.f||'').match(/\.([A-Za-z0-9]+)$/)||['',''])[1];
-      out.push({src:'cy',id:'c:'+c.id+':'+i,course:c.folder,name:nm,ext:ext,week:(function(){var w=String(m.wk||'').match(/(\d+)/);return w?+w[1]:0;})(),h:m.h,loc:m.loc&&m.f?'첨부파일/'+encodeURIComponent(c.folder)+'/'+encodeURIComponent(m.f):'',at:0,text:''});
+      out.push({src:'cy',id:'c:'+c.id+':'+i,course:c.folder,cid:c.id,name:nm,ext:ext,week:wkNum(m),h:m.h,kind:m.k||'파일',loc:m.loc&&m.f?'첨부파일/'+encodeURIComponent(c.folder)+'/'+encodeURIComponent(m.f):'',at:0,text:'',fresh:!!(m.add&&(new Date(today)-new Date(m.add))/86400000<=7)});
     });});
     (window.LOCAL_MATS||[]).forEach(function(x,i){out.push({src:'pc',id:'l:'+i,course:x.folder,name:x.n,ext:(String(x.f||'').match(/\.([A-Za-z0-9]+)$/)||['',''])[1],week:x.ord||0,h:'',loc:'첨부파일/'+encodeURIComponent(x.folder)+'/'+encodeURIComponent(x.f),at:0,text:''});});
     var up=upStore();Object.keys(up).forEach(function(k){var u=up[k];out.push({src:'up',id:u.id,course:u.c,name:u.n,ext:u.ext,week:0,size:u.size,at:u.at,text:u.t||'',note:u.note||''});});
+    ((D&&D.posts)||[]).forEach(function(p,i){var c=D.courses.filter(function(x){return x.name===p.c||x.folder===p.c||x.id===p.c;})[0];out.push({src:'post',id:'p:'+i,course:c?c.folder:p.c,cid:c&&c.id,name:p.t,ext:'',week:0,h:p.h,at:0,text:'',meta:(p.b||'게시판')+' · '+(p.d||'')+(p.a?' · '+p.a:'')});});
     return out;
   }
   function driveDraw(){
     if(!$('drList'))return;
-    var items=driveItems(),courses=[];items.forEach(function(x){if(courses.indexOf(x.course)<0)courses.push(x.course);});
-    var cnt=function(c){return items.filter(function(x){return c==='all'||x.course===c;}).length;};
-    $('drSide').innerHTML='<button class="fold" data-c="all" aria-current="'+(DRV.course==='all')+'">📁 전체 <small>'+items.length+'</small></button>'+courses.map(function(c){return '<button class="fold" data-c="'+esc(c)+'" aria-current="'+(DRV.course===c)+'">📂 '+esc(c)+' <small>'+cnt(c)+'</small></button>';}).join('');
+    var all=driveItems(),items=all.filter(function(x){return DRV.src==='post'?x.src==='post':(DRV.src==='cy'?(x.src==='cy'||x.src==='pc'):(DRV.src==='up'?x.src==='up':x.src!=='post'));});
+    var courses=[];all.forEach(function(x){if(x.src!=='post'&&courses.indexOf(x.course)<0)courses.push(x.course);});
+    if(DRV.course!=='all'&&courses.indexOf(DRV.course)<0)DRV.course='all';
+    var cnt=function(c){return all.filter(function(x){return x.src!=='post'&&(c==='all'||x.course===c);}).length;};
+    $('drSide').innerHTML='<button class="fold" data-c="all" aria-current="'+(DRV.course==='all')+'">📁 전체 <small>'+cnt('all')+'</small></button>'+courses.map(function(c){return '<button class="fold" data-c="'+esc(c)+'" aria-current="'+(DRV.course===c)+'">📂 '+esc(c)+' <small>'+cnt(c)+'</small></button>';}).join('');
+    [].forEach.call($('drSrc').children,function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-s')===DRV.src));});
+    // 학교 강의실 바로가기
+    var room=$('drRoom'),cc=has&&DRV.course!=='all'?D.courses.filter(function(c){return c.folder===DRV.course;})[0]:null;
+    if(cc){room.hidden=false;room.href='https://cyber.shinhan.ac.kr/course/view.php?id='+encodeURIComponent(cc.id);}else room.hidden=true;
     var q=DRV.q.toLowerCase().trim(),list=items.filter(function(x){
       if(DRV.course!=='all'&&x.course!==DRV.course)return false;
       if(!q)return true;
-      return x.name.toLowerCase().indexOf(q)>=0||x.course.toLowerCase().indexOf(q)>=0||(x.text&&x.text.toLowerCase().indexOf(q)>=0);
+      return x.name.toLowerCase().indexOf(q)>=0||x.course.toLowerCase().indexOf(q)>=0||(x.text&&x.text.toLowerCase().indexOf(q)>=0)||(x.meta&&x.meta.toLowerCase().indexOf(q)>=0);
     });
     list.sort(function(a,b){
       if(DRV.sort==='new')return (b.at||0)-(a.at||0);
       if(DRV.sort==='name')return a.name.localeCompare(b.name,'ko');
-      return a.course.localeCompare(b.course,'ko')||(a.week-b.week)||a.name.localeCompare(b.name,'ko');
+      return a.course.localeCompare(b.course,'ko')||(a.src==='up'?1:0)-(b.src==='up'?1:0)||(a.week-b.week)||a.name.localeCompare(b.name,'ko');
     });
-    $('drList').innerHTML=list.length?list.map(function(x){
-      var k=kindOfExt(x.ext),ic=(x.ext||'file').slice(0,4).toUpperCase(),badge=x.src==='up'?'<span class="badge up">올린 자료</span>':(x.src==='pc'?'<span class="badge">내 PC</span>':'<span class="badge cy">사이버캠퍼스</span>');
+    var grp=DRV.course!=='all'&&DRV.sort==='course'&&DRV.src!=='post',last='',h='';
+    list.forEach(function(x){
+      if(grp){var lb=x.src==='up'?'내가 올린 자료':wkLabel(x);if(lb!==last){h+='<div class="grp">'+esc(lb)+'</div>';last=lb;}}
+      var k=kindOfExt(x.ext),ic=x.src==='post'?'글':(x.kind&&!x.ext?String(x.kind).slice(0,3):(x.ext||'file').slice(0,4).toUpperCase());
+      var badge=x.src==='up'?'<span class="badge up">올린 자료</span>':(x.src==='pc'?'<span class="badge">내 PC</span>':(x.src==='post'?'<span class="badge">게시판</span>':'<span class="badge cy">사이버캠퍼스</span>'))+(x.fresh?' <span class="badge" style="background:var(--ambbg);color:var(--amb);border-color:transparent">새 자료</span>':'');
       var snip='';if(q&&x.text){var p=x.text.toLowerCase().indexOf(q);if(p>=0)snip='<br><span>…'+esc(x.text.slice(Math.max(0,p-30),p+60).replace(/\s+/g,' '))+'…</span>';}
       var acts=x.src==='up'?'<button class="btn sm ghost" data-pv="'+x.id+'">미리보기</button><button class="btn sm ghost" data-ask="'+x.id+'">AI에게 묻기</button><button class="btn sm red" data-del="'+x.id+'">삭제</button>'
-        :(x.src==='pc'?'<a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(x.loc)+'">열기</a>':'<a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(x.loc||x.h||'#')+'">열기</a>');
-      return '<div class="fl"><div class="ic '+k+'">'+esc(ic)+'</div><div class="t"><b>'+esc(x.name)+'</b><span>'+esc(x.course)+(x.week?' · '+x.week+(x.src==='pc'?'장':'주차'):'')+(x.size?' · '+sizeTxt(x.size):'')+(x.at?' · '+iso(new Date(x.at)):'')+(x.note?' · ⚠ '+esc(x.note):'')+'</span>'+snip+'</div>'+badge+'<span style="display:flex;gap:4px;flex-wrap:wrap">'+acts+'</span></div>';
-    }).join(''):'<div class="empty">'+(items.length?'조건에 맞는 자료가 없어요':'자료가 아직 없어요. 위에서 파일을 올리거나 사이버캠퍼스를 업데이트해 주세요')+'</div>';
-    // 올릴 과목 목록
-    var cur=$('drCourse').value;$('drCourse').innerHTML=(has?D.courses.map(function(c){return c.folder;}):[]).filter(function(v,i,a){return a.indexOf(v)===i;}).concat([OTHER]).map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
-    if(cur)$('drCourse').value=cur;
+        :(x.src==='pc'?'<a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(x.loc)+'">열기</a>':'<a class="btn sm ghost" target="_blank" rel="noopener noreferrer" href="'+esc(x.loc||x.h||'#')+'">'+(x.src==='post'?'글 보기':'열기')+'</a>');
+      h+='<div class="fl"><div class="ic '+k+'">'+esc(ic)+'</div><div class="t"><b>'+esc(x.name)+'</b><span>'+esc(x.course)+(x.week&&!grp&&x.src!=='up'?' · '+wkLabel(x):'')+(x.meta?' · '+esc(x.meta):'')+(x.size?' · '+sizeTxt(x.size):'')+(x.at?' · '+iso(new Date(x.at)):'')+(x.note?' · ⚠ '+esc(x.note):'')+'</span>'+snip+'</div>'+badge+'<span style="display:flex;gap:4px;flex-wrap:wrap">'+acts+'</span></div>';
+    });
+    $('drList').innerHTML=h||'<div class="empty">'+(all.length?'조건에 맞는 자료가 없어요':'자료가 아직 없어요. 위에서 파일을 올리거나 사이버캠퍼스를 업데이트해 주세요')+'</div>';
+    var cur=$('drCourse').value;$('drCourse').innerHTML=(has?D.courses.map(function(c){return c.folder;}):[]).filter(function(v,i,a2){return a2.indexOf(v)===i;}).concat([OTHER]).map(function(n){return '<option>'+esc(n)+'</option>';}).join('');
+    if(cur)$('drCourse').value=cur;else if(DRV.course!=='all'&&courses.indexOf(DRV.course)>=0)$('drCourse').value=DRV.course;
   }
   function pvOpen(id){
     var f=driveFileById(id);if(!f)return;DRV.pvId=id;
@@ -1705,6 +1727,7 @@ function __main(){
   $('drSide').addEventListener('click',function(e){var b=e.target.closest('.fold');if(b){DRV.course=b.getAttribute('data-c');driveDraw();}});
   $('drQ').oninput=function(){DRV.q=this.value;driveDraw();};
   $('drSort').onchange=function(){DRV.sort=this.value;driveDraw();};
+  $('drSrc').addEventListener('click',function(e){var b=e.target.closest('button');if(b){DRV.src=b.getAttribute('data-s');driveDraw();}});
   $('drDrop').onclick=function(){$('drFile').click();};
   $('drFile').onchange=function(){uploadFiles(this.files);this.value='';};
   ['dragenter','dragover'].forEach(function(ev){$('drDrop').addEventListener(ev,function(e){e.preventDefault();$('drDrop').classList.add('on');});});
@@ -1713,47 +1736,46 @@ function __main(){
   $('drList').addEventListener('click',function(e){
     var p=e.target.closest('[data-pv]'),d=e.target.closest('[data-del]'),a=e.target.closest('[data-ask]');
     if(p)pvOpen(p.getAttribute('data-pv'));
-    if(a){show('ai');var f=driveFileById(a.getAttribute('data-ask'));if(f){svAttach([f.id]);}}
-    if(d){var id=d.getAttribute('data-del'),f=driveFileById(id);if(f&&confirm('"'+f.n+'" 파일을 삭제할까요? (내 브라우저에서만 지워져요)')){var m=upStore();delete m[id];lsSet(UP_KEY,m);blobDel(id).then(function(){if(window.__kbRefresh)window.__kbRefresh();driveDraw();});}}
+    if(a){attAdd([a.getAttribute('data-ask')]);show('study');if(window.__aiMode)window.__aiMode('chat');}
+    if(d){var id=d.getAttribute('data-del'),f=driveFileById(id);if(f&&confirm('"'+f.n+'" 파일을 삭제할까요? (내 브라우저에서만 지워져요)')){var m=upStore();delete m[id];lsSet(UP_KEY,m);ATT.all=ATT.all.filter(function(i){return i!==id;});attDraw();blobDel(id).then(function(){if(window.__kbRefresh)window.__kbRefresh();driveDraw();});}}
   });
   $('drPvX').onclick=function(){$('drPv').hidden=true;};
   $('drPv').addEventListener('click',function(e){if(e.target===$('drPv'))$('drPv').hidden=true;});
   $('drPvOpen').onclick=function(){blobGet(DRV.pvId).then(function(b){if(b)window.open(URL.createObjectURL(b),'_blank');else alert('원본 파일이 저장돼 있지 않아요');});};
-  $('drPvAsk').onclick=function(){$('drPv').hidden=true;show('ai');svAttach([DRV.pvId]);};
+  $('drPvAsk').onclick=function(){$('drPv').hidden=true;attAdd([DRV.pvId]);show('study');if(window.__aiMode)window.__aiMode('chat');};
   window.__driveDraw=driveDraw;
   window.__driveFiles=function(){var m=upStore();return Object.keys(m).map(function(k){return m[k];});};
 
-  /* ---- 자료 첨부 고르기 (문제 풀이 · PPT) ---- */
-  var ATT={sv:[],pp:[]},attTarget='sv';
-  function attDraw(t){var box=$(t==='sv'?'svFiles':'ppFiles');box.innerHTML=ATT[t].map(function(id){var f=driveFileById(id);return f?'<span class="chip">📎 '+esc(f.n)+'<button type="button" data-rm="'+id+'">×</button></span>':'';}).join('');}
-  function svAttach(ids){ATT.sv=ATT.sv.concat(ids.filter(function(i){return ATT.sv.indexOf(i)<0;}));attDraw('sv');}
-  function openPick(t){
-    attTarget=t;var fs=window.__driveFiles().filter(function(f){return f.t;});
-    $('filePickList').innerHTML=fs.length?fs.map(function(f){return '<label style="display:flex;gap:8px;padding:5px 0;font-size:.86rem"><input type="checkbox" value="'+f.id+'"'+(ATT[t].indexOf(f.id)>=0?' checked':'')+'> '+esc(f.n)+' <span class="mini">'+esc(f.c)+'</span></label>';}).join(''):'<div class="empty">글자를 읽은 올린 자료가 없어요. 드라이브에서 먼저 올려 주세요.</div>';
+  /* ---- 자료 첨부 (질문 · 풀이 · 연습문제 · PPT · 시각화 모두 같은 첨부를 써요) ---- */
+  function attDraw(){$('attChips').innerHTML=ATT.all.map(function(id){var f=driveFileById(id);return f?'<span class="chip">📎 '+esc(f.n)+'<button type="button" data-rm="'+id+'">×</button></span>':'';}).join('');}
+  function attAdd(ids){ids.forEach(function(i){if(ATT.all.indexOf(i)<0)ATT.all.push(i);});attDraw();}
+  function openPick(){
+    var fs=window.__driveFiles().filter(function(f){return f.t;});
+    $('filePickList').innerHTML=fs.length?fs.map(function(f){return '<label style="display:flex;gap:8px;padding:5px 0;font-size:.86rem"><input type="checkbox" value="'+f.id+'"'+(ATT.all.indexOf(f.id)>=0?' checked':'')+'> '+esc(f.n)+' <span class="mini">'+esc(f.c)+'</span></label>';}).join(''):'<div class="empty">글자를 읽은 올린 자료가 없어요. 드라이브에서 먼저 올려 주세요.</div>';
     $('filePick').hidden=false;
   }
-  $('filePickOk').onclick=function(){ATT[attTarget]=[].map.call($('filePickList').querySelectorAll('input:checked'),function(i){return i.value;});attDraw(attTarget);$('filePick').hidden=true;};
+  $('attBtn').onclick=openPick;
+  $('filePickOk').onclick=function(){ATT.all=[].map.call($('filePickList').querySelectorAll('input:checked'),function(i){return i.value;});attDraw();$('filePick').hidden=true;};
   $('filePickX').onclick=function(){$('filePick').hidden=true;};
-  $('svAtt').onclick=function(){openPick('sv');};$('ppAtt').onclick=function(){openPick('pp');};
-  $('svFiles').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){ATT.sv=ATT.sv.filter(function(i){return i!==b.getAttribute('data-rm');});attDraw('sv');}});
-  $('ppFiles').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){ATT.pp=ATT.pp.filter(function(i){return i!==b.getAttribute('data-rm');});attDraw('pp');}});
+  $('attChips').addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){ATT.all=ATT.all.filter(function(i){return i!==b.getAttribute('data-rm');});attDraw();}});
 
   /* ===== AI 작업실: 문제 풀이 · PPT · 시각화 · 캔버스 ===== */
   var runs={};
   function startRun(key,p){runs[key]=p;}
   function stopRun(key){if(runs[key]&&runs[key].abort)runs[key].abort();}
 
-  /* 탭 */
-  $('aiTabs').addEventListener('click',function(e){
-    var b=e.target.closest('button');if(!b)return;var t=b.getAttribute('data-t');
-    [].forEach.call($('aiTabs').children,function(x){x.setAttribute('aria-pressed',String(x===b));});
-    ['solve','ppt','viz','canvas'].forEach(function(k){$('p-'+k).hidden=(k!==t);});
-  });
+  /* 탭: 질문 · 문제 풀이 · 연습문제 · PPT · 시각화 · 캔버스 */
+  function aiMode(t){
+    [].forEach.call($('aiTabs').children,function(x){x.setAttribute('aria-pressed',String(x.getAttribute('data-t')===t));});
+    ['chat','solve','quiz','ppt','viz','canvas'].forEach(function(k){$('p-'+k).hidden=(k!==t);});
+  }
+  window.__aiMode=aiMode;
+  $('aiTabs').addEventListener('click',function(e){var b=e.target.closest('button');if(b)aiMode(b.getAttribute('data-t'));});
+  $('aiSetBtn').onclick=function(){$('aiSet').hidden=!$('aiSet').hidden;};
   $('aiHelpBtn').onclick=function(){$('aiHelp').hidden=!$('aiHelp').hidden;};
   $('aiRefresh').onclick=function(){aiConnect();};
   $('aiModel').onchange=function(){AI.model=this.value;aiSave();};
   $('aiVision').onchange=function(){AI.vision=this.value;aiSave();};
-  ['svCourse','ppCourse','vzCourse'].forEach(function(id){courseOptions($(id));});
 
   /* ---------------- 문제 풀이 ---------------- */
   var svImgs=[];
@@ -1766,8 +1788,8 @@ function __main(){
   $('svRun').onclick=function(){
     var q=$('svQ').value.trim();if(!q&&!svImgs.length){$('svMeta').textContent='문제를 입력하거나 이미지를 첨부해 주세요';return;}
     if(needAi('svMeta'))return;
-    var mode=$('svMode').value,course=$('svCourse').value||null;
-    var rag=$('svRag').checked?ragBlock(q||'문제',course,ATT.sv,3600):{text:'',sources:[]};
+    var mode=$('svMode').value,course=$('aiC').value||null;
+    var rag=$('ragOn').checked?ragBlock(q||'문제',course,ATT.all,3600):{text:'',sources:[]};
     var modeTxt={step:'문제를 이해한 뒤 단계별로 자세히 풀고, 마지막 줄에 "정답:"으로 결론을 쓴다.',short:'핵심만 간단히 풀고, 마지막 줄에 "정답:"으로 결론을 쓴다.',check:'답을 먼저 구하고, 다른 방법으로 한 번 검산한 뒤, 마지막 줄에 "정답:"으로 결론을 쓴다.'}[mode];
     var sys='너는 대학 소프트웨어융합학과 학생의 문제 풀이를 돕는 조교다. '+POLICY+' '+modeTxt+' 코드나 수식은 코드블록으로 쓴다.';
     var user=(rag.text?'[강의자료]\n'+rag.text+'\n\n':'')+'[문제]\n'+(q||'(첨부한 이미지의 문제를 풀어 주세요)');
@@ -1804,8 +1826,8 @@ function __main(){
   $('ppRun').onclick=function(){
     var q=$('ppQ').value.trim();if(!q){$('ppMeta').textContent='발표 주제를 입력해 주세요';return;}
     if(needAi('ppMeta'))return;
-    var n=Math.max(3,Math.min(15,parseInt($('ppN').value,10)||8)),course=$('ppCourse').value||null;
-    var rag=$('ppRag').checked?ragBlock(q,course,ATT.pp,4200):{text:'',sources:[]};
+    var n=Math.max(3,Math.min(15,parseInt($('ppN').value,10)||8)),course=$('aiC').value||null;
+    var rag=$('ragOn').checked?ragBlock(q,course,ATT.all,4200):{text:'',sources:[]};
     var sys='너는 발표 자료를 구성하는 조교다. '+POLICY+' 반드시 JSON 하나만 출력한다. 형식: {"title":"발표 제목","subtitle":"부제목","slides":[{"title":"슬라이드 제목","bullets":["핵심 문장","핵심 문장"],"notes":"발표할 때 할 말"}]}. 슬라이드는 정확히 '+n+'개, 슬라이드마다 bullets는 '+($('ppTone').value==='short'?'3~4개의 짧은 문장':'4~6개의 문장')+'으로 쓴다. 자료에 없는 내용을 추가할 때는 bullets 문장 끝에 " (추론)" 또는 " (일반 지식)"을 붙인다.';
     var user=(rag.text?'[강의자료]\n'+rag.text+'\n\n':'')+'[발표 주제]\n'+q;
     setBusy('pp',true);$('ppMeta').textContent=AI.model+' 로 구성 중…';$('ppPrev').innerHTML='<div class="out">구성하는 중…</div>';
@@ -1867,7 +1889,7 @@ function __main(){
   function vzGen(extra){
     var q=$('vzQ').value.trim();if(!q){$('vzMeta').textContent='무엇을 그릴지 적어 주세요';return;}
     if(needAi('vzMeta'))return;
-    vz.kind=$('vzKind').value;var course=$('vzCourse').value||null,rag=$('vzRag').checked&&vz.kind!=='chart'?ragBlock(q,course,[],2400):{text:'',sources:[]};
+    vz.kind=$('vzKind').value;var course=$('aiC').value||null,rag=$('ragOn').checked&&vz.kind!=='chart'?ragBlock(q,course,ATT.all,2400):{text:'',sources:[]};
     var sys,user,json=false;
     if(vz.kind==='chart'){
       json=true;sys='너는 데이터 차트를 설계하는 조교다. 반드시 JSON 하나만 출력한다. 형식: {"type":"bar|line|pie|doughnut","title":"제목","labels":["라벨"],"datasets":[{"label":"이름","data":[숫자]}]}. 사용자가 적어 준 수치만 사용하고 없는 수치를 만들어 내지 않는다.';
@@ -1920,7 +1942,18 @@ function __main(){
   $('cvSvg').onclick=function(){if(cv.svg)dlBlob('캔버스.svg',new Blob([cv.svg],{type:'image/svg+xml'}));};
   $('cvPng').onclick=function(){if(cv.svg)svgToPng(cv.svg,cv.w,cv.h,'캔버스.png').catch(function(e){$('cvMeta').textContent='⚠ '+e.message;});};
 
-  window.__aiDraw=function(){if(!AI._tried){AI._tried=1;aiConnect();}courseOptions($('svCourse'));courseOptions($('ppCourse'));courseOptions($('vzCourse'));};
+  /* ---------------- 연습문제 (채팅의 문제 만들기를 재사용) ---------------- */
+  $('qzRun').onclick=function(){
+    var h=window.__quiz.html($('aiC').value||null,+$('qzN').value||6);
+    $('qzOut').innerHTML=(typeof h==='string')?h:(h&&h.html)||'<div class="empty">문제를 만들지 못했어요</div>';
+  };
+  $('qzWrong').onclick=function(){$('qzOut').innerHTML=window.__quiz.wrong();};
+  $('qzOut').addEventListener('click',function(e){
+    if(window.__quiz.click(e))return;
+    var s=e.target.closest('[data-show]');if(s){var a=s.parentNode.querySelector('.ans');if(a)a.style.display='inline';s.hidden=true;return;}
+    if(e.target.closest('[data-wrongclear]')){lsSet('도우미_오답',[]);$('qzOut').innerHTML='<div class="empty">오답 노트를 비웠어요.</div>';}
+  });
+  window.__aiDraw=function(){if(!AI._tried){AI._tried=1;aiConnect();}};
   window.__aiTest={aiChat:aiChat,AI:AI,cleanSvg:cleanSvg,parseJsonLoose:parseJsonLoose};
   window.__aiExplain=function(q,ctx,el,done){
     function go(){
@@ -1930,6 +1963,56 @@ function __main(){
     }
     if(!AI._tried){AI._tried=1;aiConnect().then(go);}else go();
   };
+
+  /* ========== 시간표 일정 추가 · 편집 (시간표 화면 안에서) ========== */
+  (function(){
+    var TKEY='내시간표_일정_v1',editing=null;
+    function evs(){var v=ls(TKEY,[]);return Array.isArray(v)?v:[];}
+    function modeOf(){return document.querySelector('input[name=tkMode]:checked').value;}
+    function modeUI(){var m=modeOf();$('tkDays').hidden=m!=='rep';$('tkDateBox').hidden=m!=='once';}
+    function fill(e){
+      $('tkTitle').textContent=e?'일정 고치기':'일정 추가';
+      $('tkT').value=e?e.title:'';
+      $('tkType').value=e&&e.type&&e.type!=='work'?e.type:'etc';
+      document.querySelector('input[name=tkMode][value='+(e&&e.date?'once':'rep')+']').checked=true;
+      [].forEach.call($('tkDays').querySelectorAll('input'),function(c){c.checked=!!(e&&(e.days||[]).indexOf(+c.value)>=0);});
+      $('tkDate').value=e&&e.date?e.date:iso(new Date());
+      $('tkS').value=e?e.start||'':'';$('tkE').value=e?e.end||'':'';
+      $('tkP').value=e?e.place||'':'';$('tkM').value=e?e.memo||'':'';
+      $('tkErr').textContent='';$('tkDel').hidden=!e;modeUI();
+    }
+    function open(id){
+      editing=id||null;
+      var e=id?evs().filter(function(x){return x.id===id;})[0]:null;
+      if(id&&!e)return;
+      fill(e);$('tkPv').hidden=false;$('tkT').focus();
+    }
+    function close(){$('tkPv').hidden=true;editing=null;}
+    function refresh(){if(typeof drawGrid==='function')drawGrid();if(typeof home==='function')home();if(typeof calDraw==='function')calDraw();}
+    [].forEach.call(document.querySelectorAll('input[name=tkMode]'),function(r){r.addEventListener('change',modeUI);});
+    if($('ttAdd'))$('ttAdd').onclick=function(){open(null);};
+    $('tkX').onclick=close;
+    $('tkSave').onclick=function(){
+      var title=$('tkT').value.trim(),m=modeOf(),days=[],date='',s=$('tkS').value,en=$('tkE').value;
+      if(!title){$('tkErr').textContent='제목을 적어 주세요.';return;}
+      if(m==='rep'){[].forEach.call($('tkDays').querySelectorAll('input:checked'),function(c){days.push(+c.value);});if(!days.length){$('tkErr').textContent='요일을 하나 이상 골라 주세요.';return;}}
+      else{date=$('tkDate').value;if(!date){$('tkErr').textContent='날짜를 골라 주세요.';return;}}
+      if(s&&en&&en<=s){$('tkErr').textContent='끝나는 시간이 시작보다 늦어야 해요.';return;}
+      var o={id:editing||('u'+Date.now().toString(36)),title:title,type:$('tkType').value,days:days,date:date,start:s,end:en,place:$('tkP').value.trim(),memo:$('tkM').value.trim()};
+      var l=evs(),i=-1;l.forEach(function(x,k){if(x.id===o.id)i=k;});
+      if(i>=0)l[i]=o;else l.push(o);
+      lsSet(TKEY,l);close();refresh();
+    };
+    $('tkDel').onclick=function(){
+      if(!editing||!confirm('이 일정을 지울까요?'))return;
+      lsSet(TKEY,evs().filter(function(x){return x.id!==editing;}));close();refresh();
+    };
+    /* 시간표의 일정 칸을 누르면 고치기 */
+    document.addEventListener('click',function(e){
+      var b=e.target.closest&&e.target.closest('[data-eid]');
+      if(b&&$('s-time')&&$('s-time').contains(b))open(b.getAttribute('data-eid'));
+    });
+  })();
 
   /* 시작 */
   $('upd').textContent=has?'데이터 업데이트\n'+(D.updated||''):'데이터 없음';

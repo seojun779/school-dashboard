@@ -19,7 +19,7 @@ def wr(name, text):
 t = rd(os.path.join(SRC, 'dashboard_template.html'))
 t = t.replace('/*__MODULE_CSS__*/', rd(os.path.join(MOD, 'style.css')))
 t = t.replace('<!--__MODULE_HTML__-->', rd(os.path.join(MOD, 'sections.html')))
-t = t.replace('/*__MODULES__*/', rd(os.path.join(MOD, 'ai_core.js')) + '\n' + rd(os.path.join(MOD, 'drive.js')) + '\n' + rd(os.path.join(MOD, 'workshop.js')))
+t = t.replace('/*__MODULES__*/', rd(os.path.join(MOD, 'ai_core.js')) + '\n' + rd(os.path.join(MOD, 'drive.js')) + '\n' + rd(os.path.join(MOD, 'workshop.js')) + '\n' + rd(os.path.join(MOD, 'timetable.js')))
 t = t.replace('__CLASSES__', '[]')
 t = t.replace('__CLAUDE_URL__', 'https://claude.ai/new').replace('__CLAUDE_ATTR__', ' target="_blank" rel="noopener noreferrer"')
 # 내 개인 자료 파일은 불러오지 않음
@@ -43,10 +43,7 @@ assert n == 1, '안내 목록을 찾지 못했어요'
 t = t.replace('<title>나의 학교</title>', '<title>나의 학교 — 과제·시간표·공부 도우미</title>', 1)
 wr('index.html', t)
 
-# ------------------------------------------------------------ 시간표.html (내 일정 없이)
-import subprocess, sys
-_env = dict(os.environ, SITE='1')
-subprocess.run([sys.executable, '-I', os.path.join(SRC, 'build_tt.py')], env=_env, check=True, cwd=SRC)
+# (시간표 편집은 이제 대시보드 안에서 해요 — 별도 시간표.html 없음)
 
 # ------------------------------------------------------------ PWA 파일
 wr('manifest.webmanifest', json.dumps({

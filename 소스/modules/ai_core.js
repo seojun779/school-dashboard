@@ -1,4 +1,5 @@
   /* ===== 내 PC AI (Ollama) 연결 · 공용 도구 ===== */
+  var ATT={all:[]};
   var AISET='ai_설정';
   var AI={host:'http://127.0.0.1:11434',model:'',vision:'',ready:false,models:[],pending:{},seq:0};
   (function(){var s=ls(AISET,{});if(s&&s.host)AI.host=s.host;if(s&&s.model)AI.model=s.model;if(s&&s.vision)AI.vision=s.vision;})();
@@ -77,13 +78,13 @@
       aiSave();
       $('aiDot').className='dot '+(AI.ready?'ok':'no');
       $('aiStat').textContent=AI.ready?'내 PC AI 연결됨 ('+names.length+'개 모델)':'연결됐지만 모델이 없어요 — 설치 안내를 따라 모델을 받아 주세요';
-      if(!AI.ready)$('aiHelp').hidden=false;
+      if(!AI.ready){$('aiSet').hidden=false;$('aiHelp').hidden=false;}
       return AI.ready;
     }).catch(function(e){
       AI.ready=false;$('aiDot').className='dot no';
       $('aiStat').textContent='내 PC AI에 연결하지 못했어요';
       $('aiModel').innerHTML='<option value="">(없음)</option>';$('aiVision').innerHTML='<option value="">(없음)</option>';
-      $('aiHelp').hidden=false;return false;
+      $('aiSet').hidden=false;$('aiHelp').hidden=false;return false;
     });
   }
 
@@ -165,5 +166,5 @@
   function needAi(metaId){
     if(AI.ready&&AI.model)return false;
     var el=$(metaId);if(el)el.textContent='내 PC AI가 연결되지 않았어요. 위의 "설치 안내"를 확인해 주세요.';
-    $('aiHelp').hidden=false;return true;
+    $('aiSet').hidden=false;$('aiHelp').hidden=false;return true;
   }
