@@ -9,7 +9,8 @@
     "storage",
     "unlimitedStorage",
     "alarms",
-    "notifications"
+    "notifications",
+    "declarativeNetRequest"
   ],
   "action": {
     "default_title": "나의 학교 대시보드",

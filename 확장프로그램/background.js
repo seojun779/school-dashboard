@@ -336,6 +336,19 @@ async function onResult(p, tabId) {
 
 
 /* ---------- 내 PC AI(Ollama) 중계: 대시보드 → 확장 → localhost ---------- */
+/* Ollama는 chrome-extension:// 출처의 POST를 403으로 막아요 → 확장 프로그램 자신(탭이 아닌 요청)이 내 PC AI로 보내는 요청에서만 Origin을 빼요 */
+(async function setupOllamaOrigin() {
+  try {
+    await chrome.declarativeNetRequest.updateSessionRules({
+      removeRuleIds: [9001, 9002],
+      addRules: ['127.0.0.1', 'localhost'].map((h, i) => ({
+        id: 9001 + i, priority: 1,
+        action: { type: 'modifyHeaders', requestHeaders: [{ header: 'origin', operation: 'remove' }] },
+        condition: { urlFilter: '|http://' + h, resourceTypes: ['xmlhttprequest', 'other'], tabIds: [-1] }
+      }))
+    });
+  } catch (e) { }
+})();
 function okHost(h) { return /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(String(h || '')); }
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name !== 'ai') { return; }

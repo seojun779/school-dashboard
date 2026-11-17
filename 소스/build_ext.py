@@ -21,7 +21,7 @@ w('manifest.json', json.dumps({
     "name": "나의 학교 대시보드 연동",
     "version": "1.0.0",
     "description": "대시보드를 열면 사이버캠퍼스 로그인을 확인하고, 로그인하면 자동으로 최신 과제·출석·강의자료와 Claude 대화를 읽어 대시보드에 채워 줘요. 읽기만 하고 비밀번호는 다루지 않아요.",
-    "permissions": ["scripting", "tabs", "storage", "unlimitedStorage", "alarms", "notifications"],
+    "permissions": ["scripting", "tabs", "storage", "unlimitedStorage", "alarms", "notifications", "declarativeNetRequest"],
     "action": {"default_title": "나의 학교 대시보드", "default_popup": "popup.html", "default_icon": {"16": "icon16.png", "48": "icon48.png", "128": "icon128.png"}},
     "icons": {"16": "icon16.png", "48": "icon48.png", "128": "icon128.png"},
     "host_permissions": ["https://cyber.shinhan.ac.kr/*", "https://claude.ai/*", "https://everytime.kr/*", "https://account.everytime.kr/*", "https://stins.shinhan.ac.kr/*", "https://erp.shinhan.ac.kr/*", "http://127.0.0.1/*", "http://localhost/*"],
