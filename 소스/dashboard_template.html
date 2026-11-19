@@ -331,6 +331,9 @@ function __main(){
     try{
       var X=ls('학교일정_추가',[]);
       if(!Array.isArray(X))X=[];
+      var OLD=/본 ?수강신청|예비수강신청|^\[학교\] 수강신청 변경/;   /* 예전에 잘못 저장된 이름(겨울학기 수강신청이 '본 수강신청'으로 표시됨) 제거 */
+      X=X.filter(function(x){return !OLD.test(x.title||'');});
+      if(D&&Array.isArray(D.schedule))D.schedule=D.schedule.filter(function(e){return !(e&&e.src==='종합정보시스템'&&OLD.test(e.title||''));});
       SCHOOL_BASE.forEach(function(b){X.push({d:b[0],t:b[1],title:'[학교] '+b[2],p:b[3],type:b[4]});});
       if(!D)return;
       var have={};(D.schedule||[]).forEach(function(e){have[e.d+'|'+e.title]=1;});
