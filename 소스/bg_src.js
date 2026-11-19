@@ -225,7 +225,18 @@ function parseSchedule(text) {
   const p2 = (n) => String(n).padStart(2, '0');
   const out = [], seen = {};
   let title = '';
+  const cut = new Date(Date.now() - 7 * 86400000), cutS = cut.getFullYear() + '-' + p2(cut.getMonth() + 1) + '-' + p2(cut.getDate());
+  const reIso = /(\d{4})-(\d{2})-(\d{2})\s*~\s*(\d{4})-(\d{2})-(\d{2})\s+(\S.*)$/;   /* 학사일정 위젯: 2026-12-08 ~ 2026-12-09 [1학년]겨울학기 수강신청 기간 */
   for (const ln of lines) {
+    const mi = ln.match(reIso);
+    if (mi) {
+      const d = mi[1] + '-' + mi[2] + '-' + mi[3], end = mi[4] + '-' + mi[5] + '-' + mi[6];
+      const tl = mi[7].replace(/\[\d학년\]\s*/g, '').trim();
+      if (end < cutS) continue;   /* 지난 일정은 제외 */
+      const add = (dd, tt) => { const k = dd + '|' + tt; if (!seen[k]) { seen[k] = 1; out.push({ d: dd, t: '', title: '[학교] ' + tt, p: '종합정보시스템 학사일정' }); } };
+      if (end !== d) { add(d, tl + ' 시작'); add(end, tl + ' 마감'); } else { add(d, tl); }
+      continue;
+    }
     const m = ln.match(re);
     if (m) {
       const d = m[1] + '-' + p2(m[2]) + '-' + p2(m[3]);
